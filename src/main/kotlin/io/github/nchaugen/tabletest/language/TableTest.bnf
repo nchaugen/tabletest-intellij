@@ -1,0 +1,39 @@
+{
+  parserClass="io.github.nchaugen.tabletest.language.parser.TableTestParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="TableTest"
+  psiImplClassSuffix="Impl"
+  psiPackage="io.github.nchaugen.tabletest.language.psi"
+  psiImplPackage="io.github.nchaugen.tabletest.language.psi.impl"
+
+  elementTypeHolderClass="io.github.nchaugen.tabletest.language.psi.TableTestTypes"
+  elementTypeClass="io.github.nchaugen.tabletest.language.psi.TableTestElementType"
+  tokenTypeClass="io.github.nchaugen.tabletest.language.psi.TableTestTokenType"
+
+  tokens = [
+    PIPE='|'
+    LEFT_BRACKET='['
+    RIGHT_BRACKET=']'
+    COMMA=','
+    COLON=':'
+    DOUBLE_QUOTE='"'
+    NEWLINE='\n'
+  ]
+}
+
+table ::= header_row row*
+
+header_row ::= header? ('|' header?)* '\n'
+row ::= element? ('|' element?)* '\n'
+
+header ::= string
+element ::= list | map | string
+
+list ::= '[' (element (',' element)* )? ']'
+
+map ::= '[' map_entry (',' map_entry)* ']'
+map_entry ::= string? ':' element?
+
+string ::= ('"' STRING_VALUE? '"') | STRING_VALUE

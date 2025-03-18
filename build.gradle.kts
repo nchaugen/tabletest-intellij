@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
+    id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
 
 group = providers.gradleProperty("pluginGroup").get()
@@ -29,6 +30,8 @@ repositories {
     }
 }
 
+sourceSets["main"].java.srcDirs("src/main/gen")
+
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
     testImplementation(libs.junit)
@@ -48,6 +51,11 @@ dependencies {
         zipSigner()
         testFramework(TestFrameworkType.Platform)
     }
+}
+
+grammarKit {
+    jflexRelease.set("1.7.0-1")
+    grammarKitRelease.set("2021.1.2")
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html

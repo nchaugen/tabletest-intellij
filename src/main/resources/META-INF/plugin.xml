@@ -1,18 +1,37 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.nchaugen.tabletestintellij</id>
-    <name>tabletest-intellij</name>
+    <id>io.github.nchaugen.tabletest</id>
+    <name>TableTest</name>
     <vendor>nchaugen</vendor>
 
     <depends>com.intellij.modules.platform</depends>
-
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <depends
+            optional="true"
+            config-file="TableTest-injections.xml">org.intellij.intelliLang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.nchaugen.tabletestintellij.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <lang.parserDefinition
+                language="TableTest"
+                implementationClass="io.github.nchaugen.tabletest.language.TableTestParserDefinition"/>
+
+        <fileType
+                name="TableTest"
+                implementationClass="io.github.nchaugen.tabletest.language.TableTestFileType"
+                fieldName="INSTANCE"
+                language="TableTest"
+                extensions="table"/>
+
+        <lang.formatter
+                language="TableTest"
+                implementationClass="io.github.nchaugen.tabletest.language.TableTestFormattingModelBuilder"/>
+
+        <lang.syntaxHighlighterFactory
+                language="TableTest"
+                implementationClass="io.github.nchaugen.tabletest.language.TableTestSyntaxHighlighterFactory"/>
+
+        <formatting.injectedOptions
+                implementation="io.github.nchaugen.tabletest.language.TableTestInjectedFormattingOptionsProvider"/>
+
     </extensions>
 
-    <applicationListeners>
-        <listener class="com.github.nchaugen.tabletestintellij.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
 </idea-plugin>

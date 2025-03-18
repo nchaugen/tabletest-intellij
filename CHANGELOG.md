@@ -1,7 +1,9 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# tabletest-intellij Changelog
+# TableTest Plugin Changelog
 
 ## [Unreleased]
 ### Added
-- Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+- Formatting of TableTest tables
+- Syntax highlighting in TableTest tables
+- Auto-injection of TableTest language for Java `@TableTest` annotations
