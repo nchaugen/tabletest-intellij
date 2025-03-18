@@ -14,9 +14,6 @@ import io.github.nchaugen.tabletest.language.parser.TableTestParser
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes
 
 class TableTestParserDefinition: ParserDefinition {
-    companion object {
-        val FILE = IFileElementType(TableTestLanguage.INSTANCE)
-    }
 
     override fun createLexer(project: Project?): Lexer = TableTestLexerAdapter()
 
@@ -31,4 +28,7 @@ class TableTestParserDefinition: ParserDefinition {
     override fun createElement(node: ASTNode?): PsiElement = TableTestTypes.Factory.createElement(node)
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile = TableTestFile(viewProvider)
+
 }
+
+val FILE = IFileElementType(TableTestLanguage)

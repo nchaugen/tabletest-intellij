@@ -2,11 +2,7 @@ package io.github.nchaugen.tabletest.language
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 
-class TableTestFileType: LanguageFileType(TableTestLanguage.INSTANCE) {
-    companion object {
-        val INSTANCE = TableTestFileType()
-    }
-
+object TableTestFileType: LanguageFileType(TableTestLanguage) {
     override fun getName() = "TableTest"
     override fun getDescription() = "TableTest language file"
     override fun getDefaultExtension() = "table"

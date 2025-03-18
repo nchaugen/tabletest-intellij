@@ -25,7 +25,7 @@ class TableTestFormattingModelBuilder : FormattingModelBuilder {
         )
 
     private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder =
-        SpacingBuilder(settings, TableTestLanguage.INSTANCE)
+        SpacingBuilder(settings, TableTestLanguage)
             .before(PIPE).spaceIf(true)
             .after(PIPE).spaceIf(true)
             .before(COLON).spaces(0)
