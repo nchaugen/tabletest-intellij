@@ -25,15 +25,15 @@
 
 table ::= header_row row*
 
-header_row ::= header? ('|' header?)* '\n'
+header_row ::= HEADER ('|' HEADER)* '\n'
 row ::= element? ('|' element?)* '\n'
 
-header ::= string
 element ::= list | map | string
 
 list ::= '[' (element (',' element)* )? ']'
 
-map ::= '[' map_entry (',' map_entry)* ']'
-map_entry ::= string? ':' element?
+map ::= '[' map_entry (',' map_entry)* ']' | empty_map
+empty_map ::= '[' ':' ']'
+map_entry ::= string ':' element
 
 string ::= ('"' STRING_VALUE? '"') | STRING_VALUE

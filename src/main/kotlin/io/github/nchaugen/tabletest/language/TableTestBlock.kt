@@ -29,11 +29,11 @@ class TableTestBlock(
         var columnIndex = 0
 
         while (child != null) {
-            if (child.elementType in listOf(TableTestTypes.ROW, TableTestTypes.HEADER)) {
+            if (child.elementType in listOf(TableTestTypes.ROW, TableTestTypes.HEADER_ROW)) {
                 var element = child.firstChildNode
                 columnIndex = 0
                 while (element != null) {
-                    if (element.elementType in listOf(TableTestTypes.ELEMENT, TableTestTypes.STRING)) {
+                    if (element.elementType in listOf(TableTestTypes.ELEMENT, TableTestTypes.STRING, TableTestTypes.HEADER)) {
                         val width = element.textLength + 1
                         if (columnIndex >= columnWidths.size) {
                             columnWidths.add(width)

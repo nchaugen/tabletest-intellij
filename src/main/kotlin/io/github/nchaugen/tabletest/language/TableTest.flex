@@ -28,16 +28,23 @@ UNQUOTED_CHAR=[^,:| \t\n\[\]\"]
 UNQUOTED_STRING=[^,:| \t\n\[\]\"][^,:|\[\]\"\n]*[^,:| \t\n\[\]\"]
 QUOTED_STRING=[^\"]+
 
-%state QUOTED_STRING, LIST
+%state DATA, QUOTED_STRING, LIST
 
 %%
 
 <YYINITIAL> {
+    {UNQUOTED_STRING}   { return TableTestTypes.HEADER; }
+    {UNQUOTED_CHAR}     { return TableTestTypes.HEADER; }
     \|                  { return TableTestTypes.PIPE; }
+    {CRLF}              { yybegin(DATA); return TableTestTypes.NEWLINE; }
+}
+
+<DATA> {
     \[                  { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET; }
     \"                  { stateStack.push(yystate()); yybegin(QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE; }
     {UNQUOTED_STRING}   { return TableTestTypes.STRING_VALUE; }
     {UNQUOTED_CHAR}     { return TableTestTypes.STRING_VALUE; }
+    \|                  { return TableTestTypes.PIPE; }
     {CRLF}              { return TableTestTypes.NEWLINE; }
 }
 
