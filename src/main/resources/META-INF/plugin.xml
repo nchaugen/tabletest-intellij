@@ -29,6 +29,9 @@
                 language="TableTest"
                 implementationClass="io.github.nchaugen.tabletest.language.TableTestSyntaxHighlighterFactory"/>
 
+        <colorSettingsPage
+                implementation="io.github.nchaugen.tabletest.language.TableTestColorSettingsPage"/>
+
         <formatting.injectedOptions
                 implementation="io.github.nchaugen.tabletest.language.TableTestInjectedFormattingOptionsProvider"/>
 
