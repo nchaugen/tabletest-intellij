@@ -19,21 +19,22 @@
     COMMA=','
     COLON=':'
     DOUBLE_QUOTE='"'
+    SINGLE_QUOTE="'"
     NEWLINE='\n'
   ]
 }
 
 table ::= header_row row*
 
-header_row ::= HEADER ('|' HEADER)* '\n'
+header_row ::= header ('|' header)* '\n'
+header ::= INPUT_HEADER | OUTPUT_HEADER
 row ::= element? ('|' element?)* '\n'
 
 element ::= list | map | string
 
 list ::= '[' (element (',' element)* )? ']'
 
-map ::= '[' map_entry (',' map_entry)* ']' | empty_map
-empty_map ::= '[' ':' ']'
-map_entry ::= string ':' element
+map ::= '[' map_entry (',' map_entry)* ']' | EMPTY_MAP
+map_entry ::= MAP_KEY ':' element
 
-string ::= ('"' STRING_VALUE? '"') | STRING_VALUE
+string ::= ('"' STRING_VALUE? '"') | ("'" STRING_VALUE? "'") | STRING_VALUE
