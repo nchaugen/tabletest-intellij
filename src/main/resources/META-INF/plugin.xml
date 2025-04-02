@@ -35,6 +35,10 @@
         <formatting.injectedOptions
                 implementation="io.github.nchaugen.tabletest.language.TableTestInjectedFormattingOptionsProvider"/>
 
+        <lang.commenter
+                language="TableTest"
+                implementationClass="io.github.nchaugen.tabletest.language.TableTestCommenter"/>
+
     </extensions>
 
 </idea-plugin>

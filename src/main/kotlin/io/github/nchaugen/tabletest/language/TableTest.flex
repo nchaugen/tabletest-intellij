@@ -24,11 +24,12 @@ import java.util.Stack;
 CRLF=\R
 WHITESPACE=[ \t]
 
-UNQUOTED_CHAR=[^,:| \t\n\[\]\"\']
-UNQUOTED_STRING=[^,:| \t\n\[\]\"\'][^,:|\[\]\"\'\n]*[^,:| \t\n\[\]\"\']
+END_OF_LINE_COMMENT=\/\/[^\r\n]*
+UNQUOTED_CHAR=[^,:| \t\r\n\[\]\"\']
+UNQUOTED_STRING=[^,:| \t\r\n\[\]\"\'][^,:|\[\]\"\'\r\n]*[^,:| \t\r\n\[\]\"\']
 DOUBLE_QUOTED_STRING=[^\"]+
 SINGLE_QUOTED_STRING=[^\']+
-MAP_KEY_STRING=[^,:|\n\[\]\"\']+:
+MAP_KEY_STRING=[^,:|\r\n\[\]\"\']+:
 
 %state DATA, DOUBLE_QUOTED_STRING, SINGLE_QUOTED_STRING, LIST
 
@@ -44,14 +45,15 @@ MAP_KEY_STRING=[^,:|\n\[\]\"\']+:
 }
 
 <DATA> {
-    \[\:\]              { return TableTestTypes.EMPTY_MAP; }
-    \[                  { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET; }
-    \"                  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE; }
-    \'                  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED_STRING); return TableTestTypes.SINGLE_QUOTE; }
-    {UNQUOTED_STRING}   { return TableTestTypes.STRING_VALUE; }
-    {UNQUOTED_CHAR}     { return TableTestTypes.STRING_VALUE; }
-    \|                  { return TableTestTypes.PIPE; }
-    {CRLF}              { return TableTestTypes.NEWLINE; }
+    {END_OF_LINE_COMMENT} { return TableTestTypes.COMMENT; }
+    \[\:\]                { return TableTestTypes.EMPTY_MAP; }
+    \[                    { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET; }
+    \"                    { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE; }
+    \'                    { stateStack.push(yystate()); yybegin(SINGLE_QUOTED_STRING); return TableTestTypes.SINGLE_QUOTE; }
+    {UNQUOTED_STRING}     { return TableTestTypes.STRING_VALUE; }
+    {UNQUOTED_CHAR}       { return TableTestTypes.STRING_VALUE; }
+    \|                    { return TableTestTypes.PIPE; }
+    {CRLF}                { return TableTestTypes.NEWLINE; }
 }
 
 <DOUBLE_QUOTED_STRING> {

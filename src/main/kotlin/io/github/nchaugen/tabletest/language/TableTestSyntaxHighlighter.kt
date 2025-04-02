@@ -10,6 +10,7 @@ import com.intellij.psi.TokenType.BAD_CHARACTER
 import com.intellij.psi.tree.IElementType
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COLON
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMA
+import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMENT
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.DOUBLE_QUOTE
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.EMPTY_MAP
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.MAP_KEY
@@ -36,6 +37,7 @@ class TableTestSyntaxHighlighter : SyntaxHighlighterBase() {
             LEFT_BRACKET, RIGHT_BRACKET, EMPTY_MAP, COMMA, COLON -> arrayOf(LIST_PUNCTUATION_KEY)
             BAD_CHARACTER -> arrayOf(BAD_CHARACTER_KEY)
             STRING_VALUE -> arrayOf(VALUE_KEY)
+            COMMENT -> arrayOf(COMMENT_KEY)
             else -> arrayOf()
         }
 
