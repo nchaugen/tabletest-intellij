@@ -20,9 +20,10 @@
 This plugin supports the TableTest extension for JUnit (link).
 
 Features:
-- Formatting of TableTest tables
-- Syntax highlighting in TableTest tables
+- Auto-format TableTest table to align columns
+- Syntax highlighting for TableTest tables
 - Auto-injection of TableTest language for Java `@TableTest` annotations
+- Line comment shortcut to comment row in and out
 
 <!-- Plugin description end -->
 

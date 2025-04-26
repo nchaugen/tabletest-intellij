@@ -31,11 +31,16 @@ DOUBLE_QUOTED_STRING=[^\"]+
 SINGLE_QUOTED_STRING=[^\']+
 MAP_KEY_STRING=[^,:|\r\n\[\]\"\']+:
 
-%state DATA, DOUBLE_QUOTED_STRING, SINGLE_QUOTED_STRING, LIST
+%state HEADER, DATA, DOUBLE_QUOTED_STRING, SINGLE_QUOTED_STRING, LIST
 
 %%
 
 <YYINITIAL> {
+    {WHITESPACE}* {UNQUOTED_CHAR}           { yypushback(1); yybegin(HEADER); return TokenType.WHITE_SPACE; }
+    ({CRLF} {WHITESPACE}*)+ {UNQUOTED_CHAR} { yypushback(1); yybegin(HEADER); return TableTestTypes.NEWLINE; }
+ }
+
+<HEADER> {
     {UNQUOTED_STRING}\? { return TableTestTypes.OUTPUT_HEADER; }
     {UNQUOTED_CHAR}\?   { return TableTestTypes.OUTPUT_HEADER; }
     {UNQUOTED_STRING}   { return TableTestTypes.INPUT_HEADER; }

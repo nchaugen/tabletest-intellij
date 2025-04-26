@@ -17,7 +17,7 @@ class TableTestBlock(
     alignment: Alignment?,
     val spacingBuilder: SpacingBuilder?,
     val columnAlignments: MutableList<Alignment> = ArrayList(),
-    val columnWidths: MutableList<Int> = ArrayList()
+    val columnWidths: MutableList<Int> = ArrayList(),
 ) : AbstractBlock(node, wrap, alignment) {
 
     init {
@@ -26,7 +26,7 @@ class TableTestBlock(
 
     private fun calculateColumnWidths(node: ASTNode) {
         var child = node.firstChildNode
-        var columnIndex = 0
+        var columnIndex: Int
 
         while (child != null) {
             if (child.elementType in listOf(TableTestTypes.ROW, TableTestTypes.HEADER_ROW)) {
@@ -66,7 +66,7 @@ class TableTestBlock(
                     }
                     columnIndex++
                 } else if (child.elementType == TableTestTypes.ROW) {
-                    columnIndex = 0 // Reset columnIndex for each new row
+                    columnIndex = 0 // Reset the columnIndex for each new row
                 }
                 val block = TableTestBlock(
                     child,
