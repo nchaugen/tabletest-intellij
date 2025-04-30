@@ -29,15 +29,14 @@ UNQUOTED_CHAR=[^,:| \t\r\n\[\]\"\']
 UNQUOTED_STRING=[^,:| \t\r\n\[\]\"\'][^,:|\[\]\"\'\r\n]*[^,:| \t\r\n\[\]\"\']
 DOUBLE_QUOTED_STRING=[^\"]+
 SINGLE_QUOTED_STRING=[^\']+
-MAP_KEY_STRING=[^,:|\r\n\[\]\"\']+:
 
 %state HEADER, DATA, DOUBLE_QUOTED_STRING, SINGLE_QUOTED_STRING, LIST
 
 %%
 
 <YYINITIAL> {
-    {WHITESPACE}* {UNQUOTED_CHAR}           { yypushback(1); yybegin(HEADER); return TokenType.WHITE_SPACE; }
-    ({CRLF} {WHITESPACE}*)+ {UNQUOTED_CHAR} { yypushback(1); yybegin(HEADER); return TableTestTypes.NEWLINE; }
+    {UNQUOTED_CHAR} { yypushback(1); yybegin(HEADER); }
+    {CRLF}          { return TableTestTypes.NEWLINE; }
  }
 
 <HEADER> {
