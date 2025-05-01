@@ -8,7 +8,6 @@ import com.intellij.formatting.SpacingBuilder
 import com.intellij.formatting.Wrap
 import com.intellij.formatting.WrapType
 import com.intellij.lang.ASTNode
-import com.intellij.platform.diagnostic.telemetry.Indexes
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes
@@ -18,7 +17,8 @@ class TableTestRowBlock(
     wrap: Wrap?,
     alignment: Alignment?,
     val spacingBuilder: SpacingBuilder?,
-    val pipeAlignments: List<Alignment>
+    val pipeAlignments: List<Alignment>,
+    val injectedInKotlin: Boolean
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {
@@ -49,5 +49,7 @@ class TableTestRowBlock(
 
     override fun isLeaf(): Boolean = node.firstChildNode == null
 
-    override fun getIndent(): Indent? = Indent.getNoneIndent()
+    override fun getIndent(): Indent? =
+        if (injectedInKotlin) Indent.getContinuationIndent()
+        else Indent.getNoneIndent()
 }
