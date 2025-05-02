@@ -24,7 +24,7 @@
   ]
 }
 
-table ::= empty_row* header_row (comment_row | row)*
+table ::= empty_row* header_row (empty_row | comment_row | row)*
 
 header_row ::= header ('|' header)* '\n'
 header ::= INPUT_HEADER | OUTPUT_HEADER
