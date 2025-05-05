@@ -2,7 +2,6 @@ package io.github.nchaugen.tabletest.language
 
 import com.intellij.formatting.Alignment
 import com.intellij.formatting.Block
-import com.intellij.formatting.ChildAttributes
 import com.intellij.formatting.Indent
 import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
@@ -17,9 +16,7 @@ class TableTestCellBlock(
     val spacingBuilder: SpacingBuilder?
 ) : AbstractBlock(node, wrap, alignment) {
 
-    override fun buildChildren(): List<Block> {
-        return emptyList()
-    }
+    override fun buildChildren(): List<Block> = emptyList()
 
     override fun getSpacing(child1: Block?, child2: Block): Spacing? =
         spacingBuilder?.getSpacing(this, child1, child2)

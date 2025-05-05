@@ -22,8 +22,8 @@ This plugin supports the TableTest extension for JUnit (link).
 Features:
 - Auto-format TableTest table to align columns
 - Syntax highlighting for TableTest tables
-- Auto-injection of TableTest language for Java `@TableTest` annotations
-- Line comment shortcut to comment row in and out
+- Auto-injection of TableTest language for `@TableTest` annotations in Java and Kotlin files
+- Shortcut for toggling commenting of selected lines
 
 <!-- Plugin description end -->
 

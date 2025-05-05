@@ -13,7 +13,8 @@ class TableTestUnformattedLineBlock(
     node: ASTNode,
     wrap: Wrap?,
     alignment: Alignment?,
-    val spacingBuilder: SpacingBuilder?
+    val spacingBuilder: SpacingBuilder?,
+    val injectedInKotlin: Boolean
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {
@@ -25,5 +26,7 @@ class TableTestUnformattedLineBlock(
 
     override fun isLeaf(): Boolean = true
 
-    override fun getIndent(): Indent? = Indent.getNoneIndent()
+    override fun getIndent(): Indent? =
+        if (injectedInKotlin) Indent.getContinuationIndent()
+        else Indent.getNoneIndent()
 }

@@ -20,7 +20,7 @@ class TableTestColorSettingsPage : ColorSettingsPage {
     override fun getAdditionalHighlightingTagToDescriptorMap() = null
 
     override fun getAttributeDescriptors() =
-        arrayOf<AttributesDescriptor>(
+        arrayOf(
             AttributesDescriptor("Column input header", TableTestSyntaxHighlighter.INPUT_HEADER_KEY),
             AttributesDescriptor("Column output header", TableTestSyntaxHighlighter.OUTPUT_HEADER_KEY),
             AttributesDescriptor("Column separator", TableTestSyntaxHighlighter.COLUMN_SEPARATOR_KEY),

@@ -50,7 +50,8 @@ class TableTestBlock(
                         child,
                         Wrap.createWrap(WrapType.NONE, false),
                         null,
-                        spacingBuilder
+                        spacingBuilder,
+                        injectedInKotlin
                     )
                 }
                 blocks.add(block)

@@ -24,12 +24,12 @@
   ]
 }
 
-table ::= empty_row* header_row (empty_row | comment_row | row)*
+table ::= (blank_line | comment_line)* header_row (blank_line | comment_line | row)*
 
 header_row ::= header ('|' header)* '\n'
 header ::= INPUT_HEADER | OUTPUT_HEADER
-comment_row ::= COMMENT '\n'
-empty_row ::= '\n'
+comment_line ::= COMMENT '\n'
+blank_line ::= '\n'
 row ::= element ('|' element?)* '\n'
 
 element ::= list | map | string
