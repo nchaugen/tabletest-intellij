@@ -1,8 +1,8 @@
 # TableTest
 
 ![Build](https://github.com/nchaugen/tabletest-intellij/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
+[![Version](https://img.shields.io/jetbrains/plugin/v/27334-tabletest.svg)](https://plugins.jetbrains.com/plugin/27334-tabletest)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/27334-tabletest.svg)](https://plugins.jetbrains.com/plugin/27334-tabletest)
 
 <!-- Plugin description -->
 Adds support for the table language used in [TableTest](https://github.com/nchaugen/tabletest) for data-driven testing in JUnit 5.
