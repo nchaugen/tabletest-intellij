@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.0.5] - 2025-05-11
+### Added
+- Plugin icons
+### Security
+- Bumped dependencies 
+
 ## [0.0.4] - 2025-05-11
 ### Fixed
 - Syntax highlighting for non-comment occurrence of '//'
