@@ -1,8 +1,6 @@
 package io.github.nchaugen.tabletest.language;
 
-import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import io.github.nchaugen.tabletest.language.psi.TableTestTokenType;
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes;
 import com.intellij.psi.TokenType;
 import java.util.Stack;
@@ -24,22 +22,22 @@ import java.util.Stack;
 CRLF=\R
 WHITESPACE=[ \t]
 
-LINE_COMMENT=\/\/[^\r\n]*
+COMMENT=[^\r\n]*
 UNQUOTED_CHAR=[^,:| \t\r\n\[\]\"\']
 UNQUOTED_STRING=[^,:| \t\r\n\[\]\"\'][^,:|\[\]\"\'\r\n]*[^,:| \t\r\n\[\]\"\']
 DOUBLE_QUOTED_STRING=[^\"]+
 SINGLE_QUOTED_STRING=[^\']+
 
-%state HEADER, DATA, DOUBLE_QUOTED_STRING, SINGLE_QUOTED_STRING, LIST
+%state HEADER_ROW, DATA, DATA_ROW, COMMENT_LINE, DOUBLE_QUOTED_STRING, SINGLE_QUOTED_STRING, LIST
 
 %%
 
 <YYINITIAL> {
-    {UNQUOTED_CHAR} { yypushback(1); yybegin(HEADER); }
-    {CRLF}          { return TableTestTypes.NEWLINE; }
+    {UNQUOTED_CHAR} { yypushback(1); yybegin(HEADER_ROW); }
+    {CRLF}          { return TableTestTypes.INITIAL_NEWLINE; }
  }
 
-<HEADER> {
+<HEADER_ROW> {
     {UNQUOTED_STRING}\? { return TableTestTypes.OUTPUT_HEADER; }
     {UNQUOTED_CHAR}\?   { return TableTestTypes.OUTPUT_HEADER; }
     {UNQUOTED_STRING}   { return TableTestTypes.INPUT_HEADER; }
@@ -49,15 +47,25 @@ SINGLE_QUOTED_STRING=[^\']+
 }
 
 <DATA> {
-    ^{LINE_COMMENT}   { return TableTestTypes.COMMENT; }
-    \[\:\]            { return TableTestTypes.EMPTY_MAP; }
-    \[                { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET; }
-    \"                { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE; }
-    \'                { stateStack.push(yystate()); yybegin(SINGLE_QUOTED_STRING); return TableTestTypes.SINGLE_QUOTE; }
-    {UNQUOTED_STRING} { return TableTestTypes.STRING_VALUE; }
-    {UNQUOTED_CHAR}   { return TableTestTypes.STRING_VALUE; }
-    \|                { return TableTestTypes.PIPE; }
-    {CRLF}            { return TableTestTypes.NEWLINE; }
+    "//"            { yybegin(COMMENT_LINE); return TableTestTypes.LINE_COMMENT; }
+    {UNQUOTED_CHAR} { yypushback(1); yybegin(DATA_ROW); }
+    {CRLF}          { return TableTestTypes.BLANK_LINE; }
+}
+
+<DATA_ROW> {
+    \[\:\]             { return TableTestTypes.EMPTY_MAP; }
+    \[                 { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET; }
+    \"                 { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE; }
+    \'                 { stateStack.push(yystate()); yybegin(SINGLE_QUOTED_STRING); return TableTestTypes.SINGLE_QUOTE; }
+    {UNQUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
+    {UNQUOTED_CHAR}    { return TableTestTypes.STRING_VALUE; }
+    \|                 { return TableTestTypes.PIPE; }
+    {CRLF}             { yybegin(DATA); return TableTestTypes.NEWLINE; }
+}
+
+<COMMENT_LINE> {
+    {COMMENT} { return TableTestTypes.COMMENT; }
+    {CRLF}    { yybegin(DATA); return TableTestTypes.NEWLINE; }
 }
 
 <DOUBLE_QUOTED_STRING> {

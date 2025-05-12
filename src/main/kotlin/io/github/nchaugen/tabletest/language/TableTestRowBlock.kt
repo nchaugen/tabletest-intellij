@@ -30,7 +30,7 @@ class TableTestRowBlock(
             if (child.elementType !in listOf(TokenType.WHITE_SPACE, TableTestTypes.NEWLINE)) {
                 val alignment = if (child.elementType == TableTestTypes.PIPE) {
                     pipeAlignments.getOrNull(columnIndex).also { columnIndex++}
-                } else null
+                } else Alignment.createAlignment()
                 val block = TableTestCellBlock(
                     child,
                     Wrap.createWrap(WrapType.NONE, false),

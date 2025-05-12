@@ -5,7 +5,6 @@ package io.github.nchaugen.tabletest.language;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import io.github.nchaugen.tabletest.language.psi.TableTestTokenType;
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes;
 import com.intellij.psi.TokenType;
 import java.util.Stack;
@@ -21,11 +20,13 @@ class TableTestLexer implements FlexLexer {
 
   /** lexical states */
   public static final int YYINITIAL = 0;
-  public static final int HEADER = 2;
+  public static final int HEADER_ROW = 2;
   public static final int DATA = 4;
-  public static final int DOUBLE_QUOTED_STRING = 6;
-  public static final int SINGLE_QUOTED_STRING = 8;
-  public static final int LIST = 10;
+  public static final int DATA_ROW = 6;
+  public static final int COMMENT_LINE = 8;
+  public static final int DOUBLE_QUOTED_STRING = 10;
+  public static final int SINGLE_QUOTED_STRING = 12;
+  public static final int LIST = 14;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -34,7 +35,7 @@ class TableTestLexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = {
-     0,  0,  1,  1,  2,  3,  4,  4,  5,  5,  6, 6
+     0,  0,  1,  1,  2,  2,  3,  3,  4,  4,  5,  5,  6,  6,  7, 7
   };
 
   /**
@@ -101,13 +102,13 @@ class TableTestLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\7\0\1\1\1\2\2\3\1\4\1\5\2\6\1\7"+
-    "\1\10\1\11\1\12\1\13\2\10\1\14\1\10\1\15"+
-    "\1\10\1\16\1\17\1\20\1\0\1\21\2\0\1\22"+
-    "\1\0\1\23\1\24";
+    "\4\0\1\1\3\0\1\2\1\3\2\4\1\5\1\6"+
+    "\2\7\1\10\1\11\2\12\1\11\1\13\1\14\1\15"+
+    "\1\16\1\1\1\13\1\17\1\13\1\20\1\13\1\21"+
+    "\1\22\1\23\1\0\1\24\1\25\3\0\1\26\1\27";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[37];
+    int [] result = new int[42];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -133,13 +134,14 @@ class TableTestLexer implements FlexLexer {
 
   private static final String ZZ_ROWMAP_PACKED_0 =
     "\0\0\0\15\0\32\0\47\0\64\0\101\0\116\0\133"+
-    "\0\150\0\133\0\165\0\133\0\202\0\133\0\217\0\133"+
-    "\0\234\0\133\0\133\0\251\0\266\0\303\0\133\0\320"+
-    "\0\133\0\335\0\133\0\133\0\133\0\352\0\202\0\234"+
-    "\0\367\0\u0104\0\335\0\133\0\133";
+    "\0\150\0\165\0\150\0\202\0\150\0\217\0\150\0\234"+
+    "\0\150\0\150\0\150\0\251\0\266\0\303\0\150\0\150"+
+    "\0\320\0\335\0\352\0\150\0\367\0\150\0\u0104\0\150"+
+    "\0\150\0\150\0\u0111\0\217\0\150\0\303\0\u011e\0\u0104"+
+    "\0\150\0\150";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[37];
+    int [] result = new int[42];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -162,24 +164,24 @@ class TableTestLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\10\1\11\1\12\1\13\3\14\1\10\1\14\1\10"+
-    "\3\14\1\15\1\11\1\16\1\17\3\14\1\15\1\14"+
-    "\1\15\2\14\1\20\1\21\1\11\1\12\1\13\1\22"+
-    "\1\23\1\14\1\21\1\14\1\21\1\24\1\14\1\20"+
-    "\1\21\1\11\1\12\1\13\1\22\1\23\1\14\1\25"+
-    "\1\14\1\21\1\24\1\14\1\20\4\26\1\27\10\26"+
-    "\5\30\1\31\7\30\1\32\1\11\2\14\1\22\1\23"+
-    "\1\33\1\32\1\34\1\32\1\24\1\35\1\14\16\0"+
-    "\1\11\15\0\1\12\12\0\1\15\1\36\5\0\1\15"+
-    "\1\0\1\37\5\0\1\16\12\0\1\21\1\40\5\0"+
-    "\1\21\1\0\1\21\13\0\1\41\4\0\1\21\1\40"+
-    "\5\0\1\42\1\0\1\21\3\0\4\26\1\0\10\26"+
-    "\5\30\1\0\7\30\1\32\1\43\5\0\1\32\1\44"+
-    "\1\32\3\0\1\15\1\36\5\0\1\15\1\0\1\15"+
-    "\16\0\1\45\1\0\2\42\2\0\11\42";
+    "\1\11\1\12\1\13\1\14\3\15\1\11\1\15\1\11"+
+    "\3\15\1\16\1\12\1\17\1\20\3\15\1\16\1\15"+
+    "\1\16\2\15\1\21\1\22\1\12\1\23\1\24\3\15"+
+    "\1\25\1\15\1\22\3\15\1\26\1\12\1\17\1\20"+
+    "\1\27\1\30\1\15\1\26\1\15\1\26\1\31\1\15"+
+    "\1\21\2\32\1\17\1\20\11\32\4\33\1\34\10\33"+
+    "\5\35\1\36\7\35\1\37\1\12\2\15\1\27\1\30"+
+    "\1\40\1\37\1\41\1\37\1\31\1\42\1\15\16\0"+
+    "\1\12\15\0\1\13\12\0\1\16\1\43\5\0\1\16"+
+    "\1\0\1\44\5\0\1\17\14\0\1\23\21\0\1\45"+
+    "\5\0\1\26\1\46\5\0\1\26\1\0\1\26\13\0"+
+    "\1\47\4\0\2\32\2\0\11\32\4\33\1\0\10\33"+
+    "\5\35\1\0\7\35\1\37\1\50\5\0\1\37\1\51"+
+    "\1\37\3\0\1\16\1\43\5\0\1\16\1\0\1\16"+
+    "\16\0\1\52\1\0";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[273];
+    int [] result = new int[299];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -217,12 +219,13 @@ class TableTestLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\7\0\1\11\1\1\1\11\1\1\1\11\1\1\1\11"+
-    "\1\1\1\11\1\1\2\11\3\1\1\11\1\1\1\11"+
-    "\1\1\3\11\1\0\1\1\2\0\1\1\1\0\2\11";
+    "\4\0\1\1\3\0\1\11\1\1\1\11\1\1\1\11"+
+    "\1\1\1\11\1\1\3\11\3\1\2\11\3\1\1\11"+
+    "\1\1\1\11\1\1\3\11\1\0\1\1\1\11\3\0"+
+    "\2\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[37];
+    int [] result = new int[42];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -282,6 +285,7 @@ class TableTestLexer implements FlexLexer {
   private long yychar;
 
   /** Whether the scanner is currently at the beginning of a line. */
+  @SuppressWarnings("unused")
   private boolean zzAtBOL = true;
 
   /** Whether the user-EOF-code has already been executed. */
@@ -478,44 +482,11 @@ class TableTestLexer implements FlexLexer {
     while (true) {
       zzMarkedPosL = zzMarkedPos;
 
-      if (zzMarkedPosL > zzStartRead) {
-        switch (zzBufferL.charAt(zzMarkedPosL-1)) {
-        case '\n':
-        case '\u000B':  // fall through
-        case '\u000C':  // fall through
-        case '\u0085':  // fall through
-        case '\u2028':  // fall through
-        case '\u2029':  // fall through
-          zzAtBOL = true;
-          break;
-        case '\r': 
-          if (zzMarkedPosL < zzEndReadL)
-            zzAtBOL = zzBufferL.charAt(zzMarkedPosL) != '\n';
-          else if (zzAtEOF)
-            zzAtBOL = false;
-          else {
-            boolean eof = zzRefill();
-            zzMarkedPosL = zzMarkedPos;
-            zzEndReadL = zzEndRead;
-            zzBufferL = zzBuffer;
-            if (eof) 
-              zzAtBOL = false;
-            else 
-              zzAtBOL = zzBufferL.charAt(zzMarkedPosL) != '\n';
-          }
-          break;
-        default:
-          zzAtBOL = false;
-        }
-      }
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
 
-      if (zzAtBOL)
-        zzState = ZZ_LEXSTATE[zzLexicalState+1];
-      else
-        zzState = ZZ_LEXSTATE[zzLexicalState];
+      zzState = ZZ_LEXSTATE[zzLexicalState];
 
       // set up zzAction for empty match case:
       int zzAttributes = zzAttrL[zzState];
@@ -579,105 +550,120 @@ class TableTestLexer implements FlexLexer {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { yypushback(1); yybegin(HEADER);
-            }
-          // fall through
-          case 21: break;
-          case 2:
-            { return TokenType.WHITE_SPACE;
-            }
-          // fall through
-          case 22: break;
-          case 3:
-            { return TableTestTypes.NEWLINE;
-            }
-          // fall through
-          case 23: break;
-          case 4:
-            { return TokenType.BAD_CHARACTER;
-            }
-          // fall through
-          case 24: break;
-          case 5:
-            { return TableTestTypes.INPUT_HEADER;
-            }
-          // fall through
-          case 25: break;
-          case 6:
-            { yybegin(DATA); return TableTestTypes.NEWLINE;
-            }
-          // fall through
-          case 26: break;
-          case 7:
-            { return TableTestTypes.PIPE;
-            }
-          // fall through
-          case 27: break;
-          case 8:
-            { return TableTestTypes.STRING_VALUE;
-            }
-          // fall through
-          case 28: break;
-          case 9:
-            { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE;
-            }
-          // fall through
-          case 29: break;
-          case 10:
-            { stateStack.push(yystate()); yybegin(SINGLE_QUOTED_STRING); return TableTestTypes.SINGLE_QUOTE;
-            }
-          // fall through
-          case 30: break;
-          case 11:
-            { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET;
-            }
-          // fall through
-          case 31: break;
-          case 12:
-            { yybegin(stateStack.pop()); return TableTestTypes.DOUBLE_QUOTE;
-            }
-          // fall through
-          case 32: break;
-          case 13:
-            { yybegin(stateStack.pop()); return TableTestTypes.SINGLE_QUOTE;
-            }
-          // fall through
-          case 33: break;
-          case 14:
-            { return TableTestTypes.COMMA;
-            }
-          // fall through
-          case 34: break;
-          case 15:
-            { return TableTestTypes.COLON;
-            }
-          // fall through
-          case 35: break;
-          case 16:
-            { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACKET;
-            }
-          // fall through
-          case 36: break;
-          case 17:
-            { return TableTestTypes.OUTPUT_HEADER;
-            }
-          // fall through
-          case 37: break;
-          case 18:
             { return TableTestTypes.COMMENT;
             }
           // fall through
+          case 24: break;
+          case 2:
+            { yypushback(1); yybegin(HEADER_ROW);
+            }
+          // fall through
+          case 25: break;
+          case 3:
+            { return TokenType.WHITE_SPACE;
+            }
+          // fall through
+          case 26: break;
+          case 4:
+            { return TableTestTypes.INITIAL_NEWLINE;
+            }
+          // fall through
+          case 27: break;
+          case 5:
+            { return TokenType.BAD_CHARACTER;
+            }
+          // fall through
+          case 28: break;
+          case 6:
+            { return TableTestTypes.INPUT_HEADER;
+            }
+          // fall through
+          case 29: break;
+          case 7:
+            { yybegin(DATA); return TableTestTypes.NEWLINE;
+            }
+          // fall through
+          case 30: break;
+          case 8:
+            { return TableTestTypes.PIPE;
+            }
+          // fall through
+          case 31: break;
+          case 9:
+            { yypushback(1); yybegin(DATA_ROW);
+            }
+          // fall through
+          case 32: break;
+          case 10:
+            { return TableTestTypes.BLANK_LINE;
+            }
+          // fall through
+          case 33: break;
+          case 11:
+            { return TableTestTypes.STRING_VALUE;
+            }
+          // fall through
+          case 34: break;
+          case 12:
+            { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE;
+            }
+          // fall through
+          case 35: break;
+          case 13:
+            { stateStack.push(yystate()); yybegin(SINGLE_QUOTED_STRING); return TableTestTypes.SINGLE_QUOTE;
+            }
+          // fall through
+          case 36: break;
+          case 14:
+            { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET;
+            }
+          // fall through
+          case 37: break;
+          case 15:
+            { yybegin(stateStack.pop()); return TableTestTypes.DOUBLE_QUOTE;
+            }
+          // fall through
           case 38: break;
-          case 19:
-            { yypushback(1); return TableTestTypes.MAP_KEY;
+          case 16:
+            { yybegin(stateStack.pop()); return TableTestTypes.SINGLE_QUOTE;
             }
           // fall through
           case 39: break;
-          case 20:
-            { return TableTestTypes.EMPTY_MAP;
+          case 17:
+            { return TableTestTypes.COMMA;
             }
           // fall through
           case 40: break;
+          case 18:
+            { return TableTestTypes.COLON;
+            }
+          // fall through
+          case 41: break;
+          case 19:
+            { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACKET;
+            }
+          // fall through
+          case 42: break;
+          case 20:
+            { return TableTestTypes.OUTPUT_HEADER;
+            }
+          // fall through
+          case 43: break;
+          case 21:
+            { yybegin(COMMENT_LINE); return TableTestTypes.LINE_COMMENT;
+            }
+          // fall through
+          case 44: break;
+          case 22:
+            { yypushback(1); return TableTestTypes.MAP_KEY;
+            }
+          // fall through
+          case 45: break;
+          case 23:
+            { return TableTestTypes.EMPTY_MAP;
+            }
+          // fall through
+          case 46: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

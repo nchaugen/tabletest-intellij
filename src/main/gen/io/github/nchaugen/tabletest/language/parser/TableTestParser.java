@@ -36,25 +36,13 @@ public class TableTestParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '\n'
-  public static boolean blank_line(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "blank_line")) return false;
-    if (!nextTokenIs(b, NEWLINE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, NEWLINE);
-    exit_section_(b, m, BLANK_LINE, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // COMMENT '\n'
+  // '//' COMMENT '\n'
   public static boolean comment_line(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "comment_line")) return false;
-    if (!nextTokenIs(b, COMMENT)) return false;
+    if (!nextTokenIs(b, LINE_COMMENT)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, COMMENT, NEWLINE);
+    r = consumeTokens(b, 0, LINE_COMMENT, COMMENT, NEWLINE);
     exit_section_(b, m, COMMENT_LINE, r);
     return r;
   }
@@ -330,7 +318,7 @@ public class TableTestParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (blank_line | comment_line)* header_row (blank_line | comment_line | row)*
+  // (INITIAL_NEWLINE | comment_line)* header_row (BLANK_LINE | comment_line | row)*
   static boolean table(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "table")) return false;
     boolean r;
@@ -342,7 +330,7 @@ public class TableTestParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (blank_line | comment_line)*
+  // (INITIAL_NEWLINE | comment_line)*
   private static boolean table_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "table_0")) return false;
     while (true) {
@@ -353,16 +341,16 @@ public class TableTestParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // blank_line | comment_line
+  // INITIAL_NEWLINE | comment_line
   private static boolean table_0_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "table_0_0")) return false;
     boolean r;
-    r = blank_line(b, l + 1);
+    r = consumeToken(b, INITIAL_NEWLINE);
     if (!r) r = comment_line(b, l + 1);
     return r;
   }
 
-  // (blank_line | comment_line | row)*
+  // (BLANK_LINE | comment_line | row)*
   private static boolean table_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "table_2")) return false;
     while (true) {
@@ -373,11 +361,11 @@ public class TableTestParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // blank_line | comment_line | row
+  // BLANK_LINE | comment_line | row
   private static boolean table_2_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "table_2_0")) return false;
     boolean r;
-    r = blank_line(b, l + 1);
+    r = consumeToken(b, BLANK_LINE);
     if (!r) r = comment_line(b, l + 1);
     if (!r) r = row(b, l + 1);
     return r;

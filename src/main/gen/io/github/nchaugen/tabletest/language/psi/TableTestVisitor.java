@@ -7,10 +7,6 @@ import com.intellij.psi.PsiElement;
 
 public class TableTestVisitor extends PsiElementVisitor {
 
-  public void visitBlankLine(@NotNull TableTestBlankLine o) {
-    visitPsiElement(o);
-  }
-
   public void visitCommentLine(@NotNull TableTestCommentLine o) {
     visitPsiElement(o);
   }

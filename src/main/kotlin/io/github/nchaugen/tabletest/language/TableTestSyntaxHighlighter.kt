@@ -16,6 +16,7 @@ import io.github.nchaugen.tabletest.language.psi.TableTestTypes.EMPTY_MAP
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.MAP_KEY
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.INPUT_HEADER
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.LEFT_BRACKET
+import io.github.nchaugen.tabletest.language.psi.TableTestTypes.LINE_COMMENT
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.OUTPUT_HEADER
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.PIPE
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.RIGHT_BRACKET
@@ -37,7 +38,7 @@ class TableTestSyntaxHighlighter : SyntaxHighlighterBase() {
             LEFT_BRACKET, RIGHT_BRACKET, EMPTY_MAP, COMMA, COLON -> arrayOf(LIST_PUNCTUATION_KEY)
             BAD_CHARACTER -> arrayOf(BAD_CHARACTER_KEY)
             STRING_VALUE -> arrayOf(VALUE_KEY)
-            COMMENT -> arrayOf(COMMENT_KEY)
+            LINE_COMMENT, COMMENT -> arrayOf(COMMENT_KEY)
             else -> arrayOf()
         }
 

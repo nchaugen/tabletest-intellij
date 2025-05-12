@@ -8,7 +8,6 @@ import io.github.nchaugen.tabletest.language.psi.impl.*;
 
 public interface TableTestTypes {
 
-  IElementType BLANK_LINE = new TableTestElementType("BLANK_LINE");
   IElementType COMMENT_LINE = new TableTestElementType("COMMENT_LINE");
   IElementType ELEMENT = new TableTestElementType("ELEMENT");
   IElementType HEADER = new TableTestElementType("HEADER");
@@ -19,13 +18,16 @@ public interface TableTestTypes {
   IElementType ROW = new TableTestElementType("ROW");
   IElementType STRING = new TableTestElementType("STRING");
 
+  IElementType BLANK_LINE = new TableTestTokenType("BLANK_LINE");
   IElementType COLON = new TableTestTokenType(":");
   IElementType COMMA = new TableTestTokenType(",");
   IElementType COMMENT = new TableTestTokenType("COMMENT");
   IElementType DOUBLE_QUOTE = new TableTestTokenType("\"");
   IElementType EMPTY_MAP = new TableTestTokenType("EMPTY_MAP");
+  IElementType INITIAL_NEWLINE = new TableTestTokenType("INITIAL_NEWLINE");
   IElementType INPUT_HEADER = new TableTestTokenType("INPUT_HEADER");
   IElementType LEFT_BRACKET = new TableTestTokenType("[");
+  IElementType LINE_COMMENT = new TableTestTokenType("//");
   IElementType MAP_KEY = new TableTestTokenType("MAP_KEY");
   IElementType NEWLINE = new TableTestTokenType("\\n");
   IElementType OUTPUT_HEADER = new TableTestTokenType("OUTPUT_HEADER");
@@ -37,10 +39,7 @@ public interface TableTestTypes {
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == BLANK_LINE) {
-        return new TableTestBlankLineImpl(node);
-      }
-      else if (type == COMMENT_LINE) {
+      if (type == COMMENT_LINE) {
         return new TableTestCommentLineImpl(node);
       }
       else if (type == ELEMENT) {

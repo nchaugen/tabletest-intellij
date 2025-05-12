@@ -9,7 +9,7 @@ import com.intellij.formatting.Wrap
 import com.intellij.lang.ASTNode
 import com.intellij.psi.formatter.common.AbstractBlock
 
-class TableTestUnformattedLineBlock(
+class TableTestCommentLineBlock(
     node: ASTNode,
     wrap: Wrap?,
     alignment: Alignment?,

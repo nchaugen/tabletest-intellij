@@ -21,15 +21,15 @@
     DOUBLE_QUOTE='"'
     SINGLE_QUOTE="'"
     NEWLINE='\n'
+    LINE_COMMENT='//'
   ]
 }
 
-table ::= (blank_line | comment_line)* header_row (blank_line | comment_line | row)*
+table ::= (INITIAL_NEWLINE | comment_line)* header_row (BLANK_LINE | comment_line | row)*
 
 header_row ::= header ('|' header)* '\n'
 header ::= INPUT_HEADER | OUTPUT_HEADER
-comment_line ::= COMMENT '\n'
-blank_line ::= '\n'
+comment_line ::= '//' COMMENT '\n'
 row ::= element ('|' element?)* '\n'
 
 element ::= list | map | string

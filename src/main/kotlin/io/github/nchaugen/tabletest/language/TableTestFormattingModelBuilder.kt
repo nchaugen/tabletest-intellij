@@ -9,6 +9,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COLON
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMA
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.LEFT_BRACKET
+import io.github.nchaugen.tabletest.language.psi.TableTestTypes.LINE_COMMENT
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.PIPE
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.RIGHT_BRACKET
 
@@ -32,13 +33,13 @@ class TableTestFormattingModelBuilder : FormattingModelBuilder {
 
     private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder =
         SpacingBuilder(settings, TableTestLanguage)
-            .before(PIPE).spaceIf(true)
-            .after(PIPE).spaces(1)
+            .around(PIPE).spaces(1)
+            .before(LINE_COMMENT).spaces(0)
+            .after(LINE_COMMENT).spaces(1)
             .before(COLON).spaces(0)
             .after(COLON).spaces(1)
             .before(COMMA).spaces(0)
             .after(COMMA).spaces(1)
             .after(LEFT_BRACKET).spaces(0)
             .before(RIGHT_BRACKET).spaces(0)
-
 }

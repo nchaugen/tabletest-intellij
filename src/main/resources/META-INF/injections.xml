@@ -1,12 +1,12 @@
 <LanguageInjectionConfiguration>
     <injection language="TableTest" injector-id="java">
-        <display-name>TableTest.value (io.github.nchaugen.tabletest)</display-name>
+        <display-name>TableTest.value (io.github.nchaugen.junit.tabletest)</display-name>
         <single-file value="false"/>
         <place><![CDATA[
         psiMethod()
             .withName("value")
             .withParameters()
-            .definedInClass("io.github.nchaugen.tabletest.TableTest")
+            .definedInClass("io.github.nchaugen.tabletest.junit.TableTest")
     ]]></place>
     </injection>
 </LanguageInjectionConfiguration>
