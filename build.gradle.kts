@@ -34,8 +34,6 @@ sourceSets["main"].java.srcDirs("src/main/gen")
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
-    testImplementation(libs.junit)
-
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
@@ -47,7 +45,11 @@ dependencies {
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
 
         testFramework(TestFrameworkType.Platform)
+        testFramework(TestFrameworkType.Plugin.Java)
     }
+
+    testImplementation(libs.junit)
+    testImplementation("org.opentest4j:opentest4j:1.3.0")
 }
 
 grammarKit {
@@ -137,6 +139,10 @@ tasks {
 
     publishPlugin {
         dependsOn(patchChangelog)
+    }
+
+    test {
+        systemProperty("idea.home.path", "/Users/nch/IdeaProjects/intellij-community/")
     }
 }
 
