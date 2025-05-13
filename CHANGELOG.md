@@ -1,5 +1,7 @@
 # TableTest Plugin Changelog
 
+## [Unreleased]
+
 ## [0.0.6] - 2025-05-13
 ### Fixed
 - Injection in `@TableTest` annotation for Java and Kotlin
