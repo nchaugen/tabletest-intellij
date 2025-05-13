@@ -4,6 +4,7 @@
 ### Fixed
 - Injection in `@TableTest` annotation for Java and Kotlin
 - Indentation when adding data rows to a TableTest file (`*.table`)
+- Improved alignment in Kotlin multi-line strings
 
 ## [0.0.5] - 2025-05-11
 ### Added

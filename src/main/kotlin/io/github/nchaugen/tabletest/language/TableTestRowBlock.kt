@@ -50,6 +50,6 @@ class TableTestRowBlock(
     override fun isLeaf(): Boolean = node.firstChildNode == null
 
     override fun getIndent(): Indent? =
-        if (injectedInKotlin) Indent.getContinuationIndent()
+        if (injectedInKotlin) Indent.getNormalIndent()
         else Indent.getNoneIndent()
 }

@@ -27,6 +27,6 @@ class TableTestCommentLineBlock(
     override fun isLeaf(): Boolean = true
 
     override fun getIndent(): Indent? =
-        if (injectedInKotlin) Indent.getContinuationIndent()
+        if (injectedInKotlin) Indent.getNormalIndent()
         else Indent.getNoneIndent()
 }

@@ -49,7 +49,7 @@ class TableTestBlock(
                     TableTestCommentLineBlock(
                         child,
                         Wrap.createWrap(WrapType.NONE, false),
-                        alignment,
+                        null,
                         spacingBuilder,
                         injectedInKotlin
                     )
