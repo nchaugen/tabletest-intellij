@@ -23,6 +23,7 @@ CRLF=\R
 WHITESPACE=[ \t]
 
 COMMENT=[^\r\n]*
+DATA_CHAR=[^ \t\r\n]
 UNQUOTED_CHAR=[^,:| \t\r\n\[\]\"\']
 UNQUOTED_STRING=[^,:| \t\r\n\[\]\"\'][^,:|\[\]\"\'\r\n]*[^,:| \t\r\n\[\]\"\']
 DOUBLE_QUOTED_STRING=[^\"]+
@@ -47,9 +48,9 @@ SINGLE_QUOTED_STRING=[^\']+
 }
 
 <DATA> {
-    "//"            { yybegin(COMMENT_LINE); return TableTestTypes.LINE_COMMENT; }
-    {UNQUOTED_CHAR} { yypushback(1); yybegin(DATA_ROW); }
-    {CRLF}          { return TableTestTypes.BLANK_LINE; }
+    "//"        { yybegin(COMMENT_LINE); return TableTestTypes.LINE_COMMENT; }
+    {DATA_CHAR} { yypushback(1); yybegin(DATA_ROW); }
+    {CRLF}      { return TableTestTypes.BLANK_LINE; }
 }
 
 <DATA_ROW> {

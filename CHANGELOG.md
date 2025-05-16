@@ -1,6 +1,8 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Allow first data cell to be a list or quoted string
 
 ## [0.0.6] - 2025-05-13
 ### Fixed
