@@ -1,9 +1,8 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.nchaugen.tabletest.language.psi;
 
-import java.util.List;
-import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.Nullable;
 
 public interface TableTestElement extends PsiElement {
 
@@ -12,6 +11,9 @@ public interface TableTestElement extends PsiElement {
 
   @Nullable
   TableTestMap getMap();
+
+  @Nullable
+  TableTestSet getSet();
 
   @Nullable
   TableTestString getString();

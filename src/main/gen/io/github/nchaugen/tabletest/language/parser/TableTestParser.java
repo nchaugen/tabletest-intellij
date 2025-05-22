@@ -1,15 +1,54 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.nchaugen.tabletest.language.parser;
 
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.LightPsiParser;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
-import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.*;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.lang.PsiParser;
-import com.intellij.lang.LightPsiParser;
+import com.intellij.psi.tree.IElementType;
+
+import static com.intellij.lang.parser.GeneratedParserUtilBase.TRUE_CONDITION;
+import static com.intellij.lang.parser.GeneratedParserUtilBase._COLLAPSE_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase._NONE_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.adapt_builder_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.consumeToken;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.consumeTokens;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.current_position_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.empty_element_parsed_guard_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.enter_section_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.exit_section_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.nextTokenIs;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.recursion_guard_;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.BLANK_LINE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.COLON;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMA;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMENT;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMENT_LINE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.DOUBLE_QUOTE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.ELEMENT;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.EMPTY_MAP;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.HEADER;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.HEADER_ROW;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.INITIAL_NEWLINE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.INPUT_HEADER;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.LEFT_BRACE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.LEFT_BRACKET;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.LINE_COMMENT;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.LIST;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.MAP;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.MAP_ENTRY;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.MAP_KEY;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.NEWLINE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.OUTPUT_HEADER;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.PIPE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.RIGHT_BRACE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.RIGHT_BRACKET;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.ROW;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.SET;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.SINGLE_QUOTE;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.STRING;
+import static io.github.nchaugen.tabletest.language.psi.TableTestTypes.STRING_VALUE;
 
 @SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class TableTestParser implements PsiParser, LightPsiParser {
@@ -48,12 +87,13 @@ public class TableTestParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // list | map | string
+  // list | set | map | string
   public static boolean element(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "element")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ELEMENT, "<element>");
     r = list(b, l + 1);
+    if (!r) r = set(b, l + 1);
     if (!r) r = map(b, l + 1);
     if (!r) r = string(b, l + 1);
     exit_section_(b, l, m, r, false, null);
@@ -264,6 +304,60 @@ public class TableTestParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "row_1_0_1")) return false;
     element(b, l + 1);
     return true;
+  }
+
+  /* ********************************************************** */
+  // '{' (element (',' element)* )? '}'
+  public static boolean set(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set")) return false;
+    if (!nextTokenIs(b, LEFT_BRACE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LEFT_BRACE);
+    r = r && set_1(b, l + 1);
+    r = r && consumeToken(b, RIGHT_BRACE);
+    exit_section_(b, m, SET, r);
+    return r;
+  }
+
+  // (element (',' element)* )?
+  private static boolean set_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_1")) return false;
+    set_1_0(b, l + 1);
+    return true;
+  }
+
+  // element (',' element)*
+  private static boolean set_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = element(b, l + 1);
+    r = r && set_1_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (',' element)*
+  private static boolean set_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_1_0_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!set_1_0_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "set_1_0_1", c)) break;
+    }
+    return true;
+  }
+
+  // ',' element
+  private static boolean set_1_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_1_0_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && element(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */

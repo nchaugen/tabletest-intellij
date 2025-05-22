@@ -39,6 +39,10 @@ public class TableTestVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitSet(@NotNull TableTestSet o) {
+    visitPsiElement(o);
+  }
+
   public void visitString(@NotNull TableTestString o) {
     visitPsiElement(o);
   }

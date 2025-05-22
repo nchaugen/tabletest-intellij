@@ -15,10 +15,12 @@ import io.github.nchaugen.tabletest.language.psi.TableTestTypes.DOUBLE_QUOTE
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.EMPTY_MAP
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.MAP_KEY
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.INPUT_HEADER
+import io.github.nchaugen.tabletest.language.psi.TableTestTypes.LEFT_BRACE
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.LEFT_BRACKET
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.LINE_COMMENT
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.OUTPUT_HEADER
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.PIPE
+import io.github.nchaugen.tabletest.language.psi.TableTestTypes.RIGHT_BRACE
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.RIGHT_BRACKET
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.SINGLE_QUOTE
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.STRING_VALUE
@@ -35,7 +37,7 @@ class TableTestSyntaxHighlighter : SyntaxHighlighterBase() {
             PIPE -> arrayOf(COLUMN_SEPARATOR_KEY)
             DOUBLE_QUOTE, SINGLE_QUOTE -> arrayOf(QUOTE_KEY)
             MAP_KEY -> arrayOf(MAP_KEY_KEY)
-            LEFT_BRACKET, RIGHT_BRACKET, EMPTY_MAP, COMMA, COLON -> arrayOf(LIST_PUNCTUATION_KEY)
+            LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE, EMPTY_MAP, COMMA, COLON -> arrayOf(LIST_PUNCTUATION_KEY)
             BAD_CHARACTER -> arrayOf(BAD_CHARACTER_KEY)
             STRING_VALUE -> arrayOf(VALUE_KEY)
             LINE_COMMENT, COMMENT -> arrayOf(COMMENT_KEY)

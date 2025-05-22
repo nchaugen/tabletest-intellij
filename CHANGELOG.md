@@ -1,6 +1,10 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+
+## [0.0.7] - 2025-05-22
+### Added
+- Support set type values
 ### Fixed
 - Allow first data cell to be a list or quoted string
 

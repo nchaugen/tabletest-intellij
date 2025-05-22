@@ -10,11 +10,11 @@ class TableTestColorSettingsPage : ColorSettingsPage {
     override fun getHighlighter() = TableTestSyntaxHighlighter()
 
     override fun getDemoText() = """
-        Value | List             | Result?
-        123   | [10, 20, 30]     | [a: 133, b: 143, c: 153]
-        ""    | []               | [:]
-        abc   | [10, '20', "30"] | [a: [1, 2, 3], b: []]
-        ]     | [,               | [:
+        Value | List             | Set    | Result?
+        123   | [10, 20, 30]     | {a, b} | [a: 133, b: 143, c: 153]
+        ""    | []               | {}     | [:]
+        abc   | [10, '20', "30"] | {1, 2} | [a: [1, 2, 3], b: []]
+        ]     | [,               | {      | [:
     """.trimIndent()
 
     override fun getAdditionalHighlightingTagToDescriptorMap() = null
@@ -26,7 +26,7 @@ class TableTestColorSettingsPage : ColorSettingsPage {
             AttributesDescriptor("Column separator", TableTestSyntaxHighlighter.COLUMN_SEPARATOR_KEY),
             AttributesDescriptor("Value", TableTestSyntaxHighlighter.VALUE_KEY),
             AttributesDescriptor("Quote", TableTestSyntaxHighlighter.QUOTE_KEY),
-            AttributesDescriptor("List and map punctuation", TableTestSyntaxHighlighter.LIST_PUNCTUATION_KEY),
+            AttributesDescriptor("Element separators", TableTestSyntaxHighlighter.LIST_PUNCTUATION_KEY),
             AttributesDescriptor("Map key", TableTestSyntaxHighlighter.MAP_KEY_KEY),
             AttributesDescriptor("Bad value", TableTestSyntaxHighlighter.BAD_CHARACTER_KEY)
         )

@@ -16,6 +16,8 @@
     PIPE='|'
     LEFT_BRACKET='['
     RIGHT_BRACKET=']'
+    LEFT_BRACE='{'
+    RIGHT_BRACE='}'
     COMMA=','
     COLON=':'
     DOUBLE_QUOTE='"'
@@ -32,9 +34,10 @@ header ::= INPUT_HEADER | OUTPUT_HEADER
 comment_line ::= '//' COMMENT '\n'
 row ::= element ('|' element?)* '\n'
 
-element ::= list | map | string
+element ::= list | set | map | string
 
 list ::= '[' (element (',' element)* )? ']'
+set ::= '{' (element (',' element)* )? '}'
 
 map ::= '[' map_entry (',' map_entry)* ']' | EMPTY_MAP
 map_entry ::= MAP_KEY ':' element

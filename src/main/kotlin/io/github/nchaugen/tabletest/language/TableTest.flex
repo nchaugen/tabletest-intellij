@@ -24,12 +24,12 @@ WHITESPACE=[ \t]
 
 COMMENT=[^\r\n]*
 DATA_CHAR=[^ \t\r\n]
-UNQUOTED_CHAR=[^,:| \t\r\n\[\]\"\']
-UNQUOTED_STRING=[^,:| \t\r\n\[\]\"\'][^,:|\[\]\"\'\r\n]*[^,:| \t\r\n\[\]\"\']
+UNQUOTED_CHAR=[^,:| \t\r\n\[\]\{\}\"\']
+UNQUOTED_STRING=[^,:| \t\r\n\[\]\{\}\"\'][^,:|\[\]\{\}\"\'\r\n]*[^,:| \t\r\n\[\]\{\}\"\']
 DOUBLE_QUOTED_STRING=[^\"]+
 SINGLE_QUOTED_STRING=[^\']+
 
-%state HEADER_ROW, DATA, DATA_ROW, COMMENT_LINE, DOUBLE_QUOTED_STRING, SINGLE_QUOTED_STRING, LIST
+%state HEADER_ROW, DATA, DATA_ROW, COMMENT_LINE, DOUBLE_QUOTED, SINGLE_QUOTED, COMPOUND
 
 %%
 
@@ -55,9 +55,10 @@ SINGLE_QUOTED_STRING=[^\']+
 
 <DATA_ROW> {
     \[\:\]             { return TableTestTypes.EMPTY_MAP; }
-    \[                 { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET; }
-    \"                 { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE; }
-    \'                 { stateStack.push(yystate()); yybegin(SINGLE_QUOTED_STRING); return TableTestTypes.SINGLE_QUOTE; }
+    \[                 { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACKET; }
+    \{                 { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACE; }
+    \"                 { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
+    \'                 { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
     {UNQUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
     {UNQUOTED_CHAR}    { return TableTestTypes.STRING_VALUE; }
     \|                 { return TableTestTypes.PIPE; }
@@ -69,22 +70,24 @@ SINGLE_QUOTED_STRING=[^\']+
     {CRLF}    { yybegin(DATA); return TableTestTypes.NEWLINE; }
 }
 
-<DOUBLE_QUOTED_STRING> {
+<DOUBLE_QUOTED> {
     \"                      { yybegin(stateStack.pop()); return TableTestTypes.DOUBLE_QUOTE; }
     {DOUBLE_QUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
 }
 
-<SINGLE_QUOTED_STRING> {
+<SINGLE_QUOTED> {
     \'                      { yybegin(stateStack.pop()); return TableTestTypes.SINGLE_QUOTE; }
     {SINGLE_QUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
 }
 
-<LIST> {
+<COMPOUND> {
     \]                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACKET; }
-    \"                  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED_STRING); return TableTestTypes.DOUBLE_QUOTE; }
-    \'                  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED_STRING); return TableTestTypes.SINGLE_QUOTE; }
+    \}                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACE; }
+    \"                  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
+    \'                  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
     \[\:\]              { return TableTestTypes.EMPTY_MAP; }
-    \[                  { stateStack.push(yystate()); yybegin(LIST); return TableTestTypes.LEFT_BRACKET; }
+    \[                  { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACKET; }
+    \{                  { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACE; }
     \,                  { return TableTestTypes.COMMA; }
     \:                  { return TableTestTypes.COLON; }
     {UNQUOTED_STRING} {WHITESPACE}* \:  { yypushback(1); return TableTestTypes.MAP_KEY; }

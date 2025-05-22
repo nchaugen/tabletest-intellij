@@ -16,6 +16,7 @@ public interface TableTestTypes {
   IElementType MAP = new TableTestElementType("MAP");
   IElementType MAP_ENTRY = new TableTestElementType("MAP_ENTRY");
   IElementType ROW = new TableTestElementType("ROW");
+  IElementType SET = new TableTestElementType("SET");
   IElementType STRING = new TableTestElementType("STRING");
 
   IElementType BLANK_LINE = new TableTestTokenType("BLANK_LINE");
@@ -26,12 +27,14 @@ public interface TableTestTypes {
   IElementType EMPTY_MAP = new TableTestTokenType("EMPTY_MAP");
   IElementType INITIAL_NEWLINE = new TableTestTokenType("INITIAL_NEWLINE");
   IElementType INPUT_HEADER = new TableTestTokenType("INPUT_HEADER");
+  IElementType LEFT_BRACE = new TableTestTokenType("{");
   IElementType LEFT_BRACKET = new TableTestTokenType("[");
   IElementType LINE_COMMENT = new TableTestTokenType("//");
   IElementType MAP_KEY = new TableTestTokenType("MAP_KEY");
   IElementType NEWLINE = new TableTestTokenType("\\n");
   IElementType OUTPUT_HEADER = new TableTestTokenType("OUTPUT_HEADER");
   IElementType PIPE = new TableTestTokenType("|");
+  IElementType RIGHT_BRACE = new TableTestTokenType("}");
   IElementType RIGHT_BRACKET = new TableTestTokenType("]");
   IElementType SINGLE_QUOTE = new TableTestTokenType("'");
   IElementType STRING_VALUE = new TableTestTokenType("STRING_VALUE");
@@ -62,6 +65,9 @@ public interface TableTestTypes {
       }
       else if (type == ROW) {
         return new TableTestRowImpl(node);
+      }
+      else if (type == SET) {
+        return new TableTestSetImpl(node);
       }
       else if (type == STRING) {
         return new TableTestStringImpl(node);
