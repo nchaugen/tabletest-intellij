@@ -265,16 +265,23 @@ public class TableTestParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // element ('|' element?)* '\n'
+  // element? ('|' element?)* '\n'
   public static boolean row(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "row")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ROW, "<row>");
-    r = element(b, l + 1);
+    r = row_0(b, l + 1);
     r = r && row_1(b, l + 1);
     r = r && consumeToken(b, NEWLINE);
     exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  // element?
+  private static boolean row_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "row_0")) return false;
+    element(b, l + 1);
+    return true;
   }
 
   // ('|' element?)*

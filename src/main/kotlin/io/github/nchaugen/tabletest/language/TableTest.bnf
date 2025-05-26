@@ -32,7 +32,7 @@ table ::= (INITIAL_NEWLINE | comment_line)* header_row (BLANK_LINE | comment_lin
 header_row ::= header ('|' header)* '\n'
 header ::= INPUT_HEADER | OUTPUT_HEADER
 comment_line ::= '//' COMMENT '\n'
-row ::= element ('|' element?)* '\n'
+row ::= element? ('|' element?)* '\n'
 
 element ::= list | set | map | string
 
