@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - Allow first data cell to be blank
+- Allow comments to be empty
 
 ## [0.0.7] - 2025-05-22
 ### Added

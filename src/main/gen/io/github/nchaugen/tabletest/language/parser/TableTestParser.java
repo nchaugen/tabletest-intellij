@@ -75,15 +75,24 @@ public class TableTestParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '//' COMMENT '\n'
+  // '//' COMMENT? '\n'
   public static boolean comment_line(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "comment_line")) return false;
     if (!nextTokenIs(b, LINE_COMMENT)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, LINE_COMMENT, COMMENT, NEWLINE);
+    r = consumeToken(b, LINE_COMMENT);
+    r = r && comment_line_1(b, l + 1);
+    r = r && consumeToken(b, NEWLINE);
     exit_section_(b, m, COMMENT_LINE, r);
     return r;
+  }
+
+  // COMMENT?
+  private static boolean comment_line_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "comment_line_1")) return false;
+    consumeToken(b, COMMENT);
+    return true;
   }
 
   /* ********************************************************** */
