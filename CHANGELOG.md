@@ -1,6 +1,8 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+
+## [0.0.8] - 2025-06-01
 ### Fixed
 - Allow first data cell to be blank
 - Allow comments to be empty
