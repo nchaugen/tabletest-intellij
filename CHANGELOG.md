@@ -1,6 +1,8 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Allow comma and colon in unquoted values except when elements in a compound value
 
 ## [0.0.8] - 2025-06-01
 ### Fixed

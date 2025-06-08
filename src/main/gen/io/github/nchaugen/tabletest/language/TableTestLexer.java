@@ -4,11 +4,12 @@
 package io.github.nchaugen.tabletest.language;
 
 import com.intellij.lexer.FlexLexer;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes;
-import com.intellij.psi.TokenType;
-import java.util.Stack;
 
+import java.util.BitSet;
+import java.util.Stack;
 
 class TableTestLexer implements FlexLexer {
 
@@ -102,14 +103,14 @@ class TableTestLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\4\0\1\1\3\0\1\2\1\3\2\4\1\5\1\6"+
+    "\4\0\1\1\5\0\1\2\1\3\2\4\1\5\1\6"+
     "\2\7\1\10\1\11\2\12\1\11\1\13\1\14\1\15"+
     "\1\16\1\17\1\1\1\13\1\20\1\13\1\21\1\13"+
-    "\1\22\1\23\1\24\1\25\1\0\1\26\1\27\3\0"+
-    "\1\30\1\31";
+    "\1\22\1\23\1\24\1\25\3\0\1\26\1\27\3\0"+
+    "\1\30\1\13\2\0\1\31\1\0";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[44];
+    int [] result = new int[52];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -135,14 +136,15 @@ class TableTestLexer implements FlexLexer {
 
   private static final String ZZ_ROWMAP_PACKED_0 =
     "\0\0\0\17\0\36\0\55\0\74\0\113\0\132\0\151"+
-    "\0\170\0\207\0\170\0\226\0\170\0\245\0\170\0\264"+
-    "\0\170\0\170\0\170\0\303\0\322\0\341\0\170\0\170"+
-    "\0\360\0\170\0\377\0\u010e\0\170\0\u011d\0\170\0\u012c"+
-    "\0\170\0\170\0\170\0\170\0\u013b\0\245\0\170\0\341"+
-    "\0\u014a\0\u012c\0\170\0\170";
+    "\0\170\0\207\0\226\0\245\0\226\0\264\0\226\0\303"+
+    "\0\226\0\322\0\226\0\226\0\226\0\341\0\360\0\377"+
+    "\0\226\0\226\0\u010e\0\226\0\u011d\0\u012c\0\226\0\u013b"+
+    "\0\226\0\u014a\0\226\0\226\0\226\0\226\0\u0159\0\u0168"+
+    "\0\u0177\0\303\0\226\0\377\0\u0186\0\u014a\0\226\0\u0195"+
+    "\0\u01a4\0\u0159\0\226\0\u0195";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[44];
+    int [] result = new int[52];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -165,24 +167,30 @@ class TableTestLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\11\1\12\1\13\1\14\3\15\1\11\1\15\1\11"+
-    "\5\15\1\16\1\12\1\17\1\20\3\15\1\16\1\15"+
-    "\1\16\3\15\1\21\1\15\1\22\1\12\1\23\1\24"+
-    "\3\22\1\25\7\22\1\26\1\12\1\17\1\20\1\27"+
-    "\1\30\1\15\1\26\1\15\1\26\1\31\1\15\1\32"+
-    "\1\21\1\15\2\33\1\17\1\20\13\33\4\34\1\35"+
-    "\12\34\5\36\1\37\11\36\1\40\1\12\2\15\1\27"+
-    "\1\30\1\41\1\40\1\42\1\40\1\31\1\43\1\32"+
-    "\1\15\1\44\20\0\1\12\17\0\1\13\14\0\1\16"+
-    "\1\45\5\0\1\16\1\0\1\46\7\0\1\17\16\0"+
-    "\1\23\23\0\1\47\7\0\1\26\1\50\5\0\1\26"+
-    "\1\0\1\26\15\0\1\51\6\0\2\33\2\0\13\33"+
-    "\4\34\1\0\12\34\5\36\1\0\11\36\1\40\1\52"+
-    "\5\0\1\40\1\53\1\40\5\0\1\16\1\45\5\0"+
-    "\1\16\1\0\1\16\20\0\1\54\3\0";
+    "\1\13\1\14\1\15\1\16\2\17\4\13\1\17\1\13"+
+    "\2\17\1\13\1\20\1\14\1\21\1\22\2\17\4\20"+
+    "\1\17\1\20\1\17\1\23\1\20\1\24\1\14\1\25"+
+    "\1\26\3\24\1\27\7\24\1\30\1\14\1\21\1\22"+
+    "\1\31\1\32\4\30\1\33\1\30\1\34\1\23\1\30"+
+    "\2\35\1\21\1\22\13\35\4\36\1\37\12\36\5\40"+
+    "\1\41\11\40\1\42\1\14\2\17\1\31\1\32\1\43"+
+    "\1\42\1\44\1\42\1\33\1\45\1\34\1\17\1\46"+
+    "\1\47\6\0\1\47\1\0\1\47\15\0\1\50\26\0"+
+    "\1\14\17\0\1\15\14\0\1\20\1\51\2\0\5\20"+
+    "\1\52\3\20\1\0\1\20\2\0\1\21\16\0\1\25"+
+    "\23\0\1\53\7\0\1\30\1\54\2\0\11\30\1\0"+
+    "\1\30\10\0\1\55\6\0\2\35\2\0\13\35\4\36"+
+    "\1\0\12\36\5\40\1\0\11\40\1\42\1\56\2\0"+
+    "\2\42\1\0\1\42\1\57\1\42\1\60\1\0\1\42"+
+    "\1\0\1\61\1\47\1\62\2\0\2\47\1\0\1\47"+
+    "\1\0\1\47\2\0\1\47\1\0\1\47\1\0\1\50"+
+    "\15\0\1\20\1\51\2\0\11\20\1\0\1\20\13\0"+
+    "\1\63\3\0\1\60\1\64\2\0\2\60\1\0\1\60"+
+    "\1\0\2\60\1\0\1\60\2\0\2\61\2\0\2\61"+
+    "\1\0\1\61\1\57\1\61\2\0\1\61\1\0\1\61";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[345];
+    int [] result = new int[435];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -220,13 +228,13 @@ class TableTestLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\4\0\1\1\3\0\1\11\1\1\1\11\1\1\1\11"+
+    "\4\0\1\1\5\0\1\11\1\1\1\11\1\1\1\11"+
     "\1\1\1\11\1\1\3\11\3\1\2\11\1\1\1\11"+
-    "\2\1\1\11\1\1\1\11\1\1\4\11\1\0\1\1"+
-    "\1\11\3\0\2\11";
+    "\2\1\1\11\1\1\1\11\1\1\4\11\2\1\1\0"+
+    "\1\1\1\11\3\0\1\11\1\1\2\0\1\11\1\0";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[44];
+    int [] result = new int[52];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -272,6 +280,9 @@ class TableTestLexer implements FlexLexer {
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
+
+  /** For the backwards DFA of general lookahead statements */
+  private BitSet zzFin = null;
 
   /** Number of newlines encountered up to the start of the matched text. */
   @SuppressWarnings("unused")
@@ -666,7 +677,36 @@ class TableTestLexer implements FlexLexer {
           // fall through
           case 48: break;
           case 24:
-            { yypushback(1); return TableTestTypes.MAP_KEY;
+            // general lookahead, find correct zzMarkedPos
+            { int zzFState = 8;
+              int zzFPos = zzStartRead;
+              if (zzFin == null || zzFin.size() <= zzBufferL.length()) {
+                zzFin = new BitSet(zzBufferL.length()+1);
+              }
+              BitSet zzFinL = zzFin;
+              while (zzFState != -1 && zzFPos < zzMarkedPos) {
+                zzFinL.set(zzFPos, ((zzAttrL[zzFState] & 1) == 1));
+                zzInput = Character.codePointAt(zzBufferL, zzFPos);
+                zzFPos += Character.charCount(zzInput);
+                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMap(zzInput) ];
+              }
+              if (zzFState != -1) {
+                zzFinL.set(zzFPos++, ((zzAttrL[zzFState] & 1) == 1));
+              }
+              while (zzFPos <= zzMarkedPos) {
+                zzFinL.clear(zzFPos++);
+              }
+
+              zzFState = 9;
+              zzFPos = zzMarkedPos;
+              while (!zzFinL.get(zzFPos) || (zzAttrL[zzFState] & 1) != 1) {
+                zzInput = Character.codePointBefore(zzBufferL, zzFPos);
+                zzFPos -= Character.charCount(zzInput);
+                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMap(zzInput) ];
+              };
+              zzMarkedPos = zzFPos;
+            }
+            { return TableTestTypes.MAP_KEY;
             }
           // fall through
           case 49: break;

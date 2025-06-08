@@ -96,14 +96,14 @@ public class TableTestParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // list | set | map | string
+  // map | list | set | string
   public static boolean element(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "element")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ELEMENT, "<element>");
-    r = list(b, l + 1);
+    r = map(b, l + 1);
+    if (!r) r = list(b, l + 1);
     if (!r) r = set(b, l + 1);
-    if (!r) r = map(b, l + 1);
     if (!r) r = string(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;

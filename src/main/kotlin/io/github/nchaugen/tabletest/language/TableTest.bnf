@@ -34,12 +34,12 @@ header ::= INPUT_HEADER | OUTPUT_HEADER
 comment_line ::= '//' COMMENT? '\n'
 row ::= element? ('|' element?)* '\n'
 
-element ::= list | set | map | string
+element ::= map | list | set | string
 
+map ::= '[' map_entry (',' map_entry)* ']' | EMPTY_MAP
 list ::= '[' (element (',' element)* )? ']'
 set ::= '{' (element (',' element)* )? '}'
 
-map ::= '[' map_entry (',' map_entry)* ']' | EMPTY_MAP
 map_entry ::= MAP_KEY ':' element
 
 string ::= ('"' STRING_VALUE? '"') | ("'" STRING_VALUE? "'") | STRING_VALUE
