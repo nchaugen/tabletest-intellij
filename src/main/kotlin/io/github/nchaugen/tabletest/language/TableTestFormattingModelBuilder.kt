@@ -5,6 +5,7 @@ import com.intellij.formatting.FormattingModel
 import com.intellij.formatting.FormattingModelBuilder
 import com.intellij.formatting.FormattingModelProvider.createFormattingModelForPsiFile
 import com.intellij.formatting.SpacingBuilder
+import com.intellij.psi.PsiFile
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COLON
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMA
@@ -30,8 +31,23 @@ class TableTestFormattingModelBuilder : FormattingModelBuilder {
             formattingContext.codeStyleSettings
         )
 
-    private fun isInjectedIntoKotlinFile(formattingContext: FormattingContext): Boolean =
-        formattingContext.virtualFile?.name?.endsWith(".kt", true) ?: false
+    private fun isInjectedIntoKotlinFile(formattingContext: FormattingContext): Boolean {
+        val file: PsiFile = formattingContext.containingFile
+
+        if (file.originalFile != file) {
+            return file.originalFile.language.id == "kotlin"
+        }
+
+        val allFiles = file.viewProvider.allFiles
+        if (allFiles.size > 1) {
+            val hostFile = allFiles.firstOrNull { it.language.id != "TableTest" }
+            if (hostFile != null) {
+                return hostFile.language.id == "kotlin"
+            }
+        }
+
+        return file.viewProvider.virtualFile.name.endsWith(".kt")
+    }
 
     private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder =
         SpacingBuilder(settings, TableTestLanguage)
