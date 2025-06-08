@@ -1,6 +1,10 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+
+## [0.0.9] - 2025-06-08
+### Added
+- Autoformatting of elements inside maps, sets and lists
 ### Fixed
 - Allow comma and colon in unquoted values except when elements in a compound value
 
