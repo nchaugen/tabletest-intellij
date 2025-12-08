@@ -53,8 +53,8 @@ dependencies {
 }
 
 grammarKit {
-    jflexRelease.set("1.7.0-1")
-    grammarKitRelease.set("2021.1.2")
+    jflexRelease.set("1.9.2")
+    grammarKitRelease.set("2022.3.2")
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
