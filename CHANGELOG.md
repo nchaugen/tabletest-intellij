@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.0.10] - 2025-12-08
+### Security
+- Bumped dependencies
+
 ## [0.0.9] - 2025-06-08
 ### Added
 - Autoformatting of elements inside maps, sets and lists
