@@ -138,10 +138,6 @@ tasks {
         gradleVersion = providers.gradleProperty("gradleVersion").get()
     }
 
-    publishPlugin {
-        dependsOn(patchChangelog)
-    }
-
     test {
         systemProperty("idea.home.path", "/Users/nch/IdeaProjects/intellij-community/")
     }
