@@ -21,8 +21,8 @@ class TableTestColorSettingsPage : ColorSettingsPage {
 
     override fun getAttributeDescriptors() =
         arrayOf(
-            AttributesDescriptor("Column input header", TableTestSyntaxHighlighter.INPUT_HEADER_KEY),
-            AttributesDescriptor("Column output header", TableTestSyntaxHighlighter.OUTPUT_HEADER_KEY),
+            AttributesDescriptor("Input header", TableTestSyntaxHighlighter.INPUT_HEADER_KEY),
+            AttributesDescriptor("Expected header", TableTestSyntaxHighlighter.OUTPUT_HEADER_KEY),
             AttributesDescriptor("Column separator", TableTestSyntaxHighlighter.COLUMN_SEPARATOR_KEY),
             AttributesDescriptor("Value", TableTestSyntaxHighlighter.VALUE_KEY),
             AttributesDescriptor("Quote", TableTestSyntaxHighlighter.QUOTE_KEY),
