@@ -50,6 +50,7 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation("org.opentest4j:opentest4j:1.3.0")
+    testImplementation("io.github.nchaugen:tabletest-parser:0.5.9")
 }
 
 grammarKit {
@@ -143,6 +144,26 @@ tasks {
 
     test {
         systemProperty("idea.home.path", "/Users/nch/IdeaProjects/intellij-community/")
+    }
+
+    generateLexer {
+        sourceFile.set(file("src/main/kotlin/io/github/nchaugen/tabletest/language/TableTest.flex"))
+        targetOutputDir.set(file("src/main/gen/io/github/nchaugen/tabletest/language"))
+    }
+
+    generateParser {
+        sourceFile.set(file("src/main/kotlin/io/github/nchaugen/tabletest/language/TableTest.bnf"))
+        targetRootOutputDir.set(file("src/main/gen"))
+        pathToParser.set("io/github/nchaugen/tabletest/language/parser/TableTestParser.java")
+        pathToPsiRoot.set("io/github/nchaugen/tabletest/language/psi")
+    }
+
+    compileKotlin {
+        dependsOn(generateLexer, generateParser)
+    }
+
+    compileJava {
+        dependsOn(generateLexer, generateParser)
     }
 }
 

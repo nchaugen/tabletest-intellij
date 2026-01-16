@@ -29,8 +29,12 @@ UNQUOTED_CHAR=[^|\[\{\"\' \t\r\n]
 UNQUOTED_STRING=[^|\[\{\"\' \t\r\n]([^|\r\n]*[^| \t\r\n])?
 DOUBLE_QUOTED_STRING=[^\"]+
 SINGLE_QUOTED_STRING=[^\']+
+DOUBLE_QUOTED_CONTENT=[^\"\r\n]*
+SINGLE_QUOTED_CONTENT=[^\'\r\n]*
 MAP_KEY_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^|,:\[\]\r\n]*[^|,:\[\] \t\r\n])?
 UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\n])?
+DOUBLE_QUOTED_ELEMENT_CONTENT=[^\"\r\n,\]\}]*
+SINGLE_QUOTED_ELEMENT_CONTENT=[^\'\r\n,\]\}]*
 
 %state HEADER_ROW, DATA, DATA_ROW, COMMENT_LINE, INITIAL_COMMENT_LINE, DOUBLE_QUOTED, SINGLE_QUOTED, COMPOUND
 
@@ -64,8 +68,12 @@ UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\
     \[\:\]             { return TableTestTypes.EMPTY_MAP; }
     \[                 { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACKET; }
     \{                 { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACE; }
-    \"                 { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
-    \'                 { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
+    // Matched quotes - enter quoted state only if closing quote exists on same line
+    \"  / {DOUBLE_QUOTED_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
+    \'  / {SINGLE_QUOTED_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
+    // Unmatched quotes - treat as unquoted string value
+    \" {DOUBLE_QUOTED_CONTENT} / [\r\n|]  { return TableTestTypes.STRING_VALUE; }
+    \' {SINGLE_QUOTED_CONTENT} / [\r\n|]  { return TableTestTypes.STRING_VALUE; }
     {UNQUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
     \|                 { return TableTestTypes.PIPE; }
     {CRLF}             { yybegin(DATA); return TableTestTypes.NEWLINE; }
@@ -89,8 +97,12 @@ UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\
 <COMPOUND> {
     \]                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACKET; }
     \}                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACE; }
-    \"                  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
-    \'                  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
+    // Matched quotes - enter quoted state only if closing quote exists before delimiter
+    \"  / {DOUBLE_QUOTED_ELEMENT_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
+    \'  / {SINGLE_QUOTED_ELEMENT_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
+    // Unmatched quotes - treat as unquoted string value
+    \" {DOUBLE_QUOTED_ELEMENT_CONTENT} / [,\]\}\r\n]  { return TableTestTypes.STRING_VALUE; }
+    \' {SINGLE_QUOTED_ELEMENT_CONTENT} / [,\]\}\r\n]  { return TableTestTypes.STRING_VALUE; }
     \[\:\]              { return TableTestTypes.EMPTY_MAP; }
     \[                  { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACKET; }
     \{                  { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACE; }

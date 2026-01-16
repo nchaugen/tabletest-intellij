@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - First-line comments were incorrectly parsed as headers
+- Unpaired quotes in unquoted strings were incorrectly shown as illegal
 
 ## [0.0.10] - 2025-12-08
 ### Security
