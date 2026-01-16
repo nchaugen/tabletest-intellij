@@ -1,5 +1,6 @@
 # GitHub Actions Workflow created for handling the release process based on the draft release prepared with the Build workflow.
-# Running the publishPlugin task requires all following secrets to be provided: PUBLISH_TOKEN, PRIVATE_KEY, PRIVATE_KEY_PASSWORD, CERTIFICATE_CHAIN.
+# Running the publishPlugin task requires PUBLISH_TOKEN secret.
+# Plugin signing is optional - provide PRIVATE_KEY, PRIVATE_KEY_PASSWORD, CERTIFICATE_CHAIN secrets to enable.
 # See https://plugins.jetbrains.com/docs/intellij/plugin-signing.html for more information.
 
 name: Release
