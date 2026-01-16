@@ -5,7 +5,7 @@ GRADLE_PROPERTIES="gradle.properties"
 CHANGELOG="CHANGELOG.md"
 
 # Read current version from gradle.properties
-current_version=$(grep "^pluginVersion=" "$GRADLE_PROPERTIES" | cut -d'=' -f2)
+current_version=$(grep "^pluginVersion" "$GRADLE_PROPERTIES" | sed 's/.*= *//')
 
 if [ -z "$1" ]; then
     # No argument - use version from gradle.properties
@@ -18,9 +18,9 @@ else
     echo "Updating version from $current_version to $version"
 
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/^pluginVersion=.*/pluginVersion=$version/" "$GRADLE_PROPERTIES"
+        sed -i '' "s/^pluginVersion *=.*/pluginVersion = $version/" "$GRADLE_PROPERTIES"
     else
-        sed -i "s/^pluginVersion=.*/pluginVersion=$version/" "$GRADLE_PROPERTIES"
+        sed -i "s/^pluginVersion *=.*/pluginVersion = $version/" "$GRADLE_PROPERTIES"
     fi
     echo "Updated gradle.properties"
 
