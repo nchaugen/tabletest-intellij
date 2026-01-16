@@ -20,8 +20,8 @@ class TableTestBlock(
     node: ASTNode,
     wrap: Wrap?,
     alignment: Alignment?,
-    val spacingBuilder: SpacingBuilder?,
-    val injectedInKotlin: Boolean
+    private val spacingBuilder: SpacingBuilder?,
+    private val injectedInKotlin: Boolean
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {

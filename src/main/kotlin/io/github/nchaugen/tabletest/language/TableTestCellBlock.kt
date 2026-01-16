@@ -15,7 +15,7 @@ class TableTestCellBlock(
     node: ASTNode,
     wrap: Wrap?,
     alignment: Alignment?,
-    val spacingBuilder: SpacingBuilder?
+    private val spacingBuilder: SpacingBuilder?
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {
