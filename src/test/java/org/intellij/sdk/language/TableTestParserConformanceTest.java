@@ -288,6 +288,175 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
         assertBothParsersAccept("header\n[key:'value']\n");
     }
 
+    // --- Valid edge cases ---
+
+    public void testQuotedEmptyList() {
+        // "[]" - quoted brackets treated as string
+        assertBothParsersAccept("header\n\"[]\"\n");
+    }
+
+    public void testQuotedEmptySet() {
+        // "{}" - quoted braces treated as string
+        assertBothParsersAccept("header\n\"{}\"\n");
+    }
+
+    public void testQuotedEmptyMap() {
+        // "[:]" - quoted empty map treated as string
+        assertBothParsersAccept("header\n\"[:]\"\n");
+    }
+
+    public void testSingleClosingBracket() {
+        // ] - closing bracket only is valid string
+        assertBothParsersAccept("header\n]\n");
+    }
+
+    public void testSingleClosingBrace() {
+        // } - closing brace only is valid string
+        assertBothParsersAccept("header\n}\n");
+    }
+
+    public void testMapClosingOnly() {
+        // :] - map closing only is valid string
+        assertBothParsersAccept("header\n:]\n");
+    }
+
+    public void testPrefixBeforeBrackets() {
+        // a[] - prefix before brackets is valid string
+        assertBothParsersAccept("header\na[]\n");
+    }
+
+    public void testPrefixBeforeBraces() {
+        // a{} - prefix before braces is valid string
+        assertBothParsersAccept("header\na{}\n");
+    }
+
+    public void testPrefixBeforeMap() {
+        // a[:] - prefix before map is valid string
+        assertBothParsersAccept("header\na[:]\n");
+    }
+
+    public void testWhitespaceInList() {
+        // [  a  ,  a  ] - padded list
+        assertBothParsersAccept("header\n  [  a  ,  a  ]  \n");
+    }
+
+    public void testWhitespaceInSet() {
+        // {  a  ,  a  } - padded set
+        assertBothParsersAccept("header\n  {  a  ,  a  }  \n");
+    }
+
+    public void testWhitespaceInMap() {
+        // [   a   :  a   ] - padded map
+        assertBothParsersAccept("header\n  [   a   :  a   ]  \n");
+    }
+
+    // --- Invalid syntax tests ---
+
+    public void testTripleSingleQuotes() {
+        // ''' - triple single quotes
+        assertBothParsersReject("header\n'''\n");
+    }
+
+    public void testTripleDoubleQuotes() {
+        // """ - triple double quotes
+        assertBothParsersReject("header\n\"\"\"\n");
+    }
+
+    public void testStandaloneOpeningBracket() {
+        // [ - standalone opening bracket
+        assertBothParsersReject("header\n[\n");
+    }
+
+    public void testStandaloneOpeningBrace() {
+        // { - standalone opening brace
+        assertBothParsersReject("header\n{\n");
+    }
+
+    public void testMissingClosingForEmptyMap() {
+        // [: - missing closing for empty map
+        assertBothParsersReject("header\n[:\n");
+    }
+
+    public void testListWithBrace() {
+        // [a, b} - list with brace
+        assertBothParsersReject("header\n[a, b}\n");
+    }
+
+    public void testSetWithBracket() {
+        // {a, b] - set with bracket
+        assertBothParsersReject("header\n{a, b]\n");
+    }
+
+    public void testMapWithBrace() {
+        // [a: b} - map with brace
+        assertBothParsersReject("header\n[a: b}\n");
+    }
+
+    public void testBraceBracketMismatch() {
+        // {a: b] - brace-bracket mismatch
+        assertBothParsersReject("header\n{a: b]\n");
+    }
+
+    public void testDoubleOpeningBracket() {
+        // [[] - double opening bracket
+        assertBothParsersReject("header\n[[]\n");
+    }
+
+    public void testDoubleOpeningBrace() {
+        // {{} - double opening brace
+        assertBothParsersReject("header\n{{}\n");
+    }
+
+    public void testDoubleOpeningWithMap() {
+        // [[:] - double opening with map
+        assertBothParsersReject("header\n[[:]\n");
+    }
+
+    public void testDoubleClosingBracket() {
+        // []] - double closing bracket
+        assertBothParsersReject("header\n[]]\n");
+    }
+
+    public void testDoubleClosingBrace() {
+        // {}} - double closing brace
+        assertBothParsersReject("header\n{}}\n");
+    }
+
+    public void testDoubleClosingWithMap() {
+        // [:]] - double closing with map
+        assertBothParsersReject("header\n[:]]\n");
+    }
+
+    public void testTrailingCharAfterList() {
+        // []a - after empty list
+        assertBothParsersReject("header\n[]a\n");
+    }
+
+    public void testTrailingCharAfterSet() {
+        // {}a - after empty set
+        assertBothParsersReject("header\n{}a\n");
+    }
+
+    public void testTrailingCharAfterMap() {
+        // [:]a - after empty map
+        assertBothParsersReject("header\n[:]a\n");
+    }
+
+    public void testListTrailingComma() {
+        // [a,] - list trailing comma
+        assertBothParsersReject("header\n[a,]\n");
+    }
+
+    public void testSetTrailingComma() {
+        // {a,} - set trailing comma
+        assertBothParsersReject("header\n{a,}\n");
+    }
+
+    public void testMapTrailingComma() {
+        // [a:b,] - map trailing comma
+        assertBothParsersReject("header\n[a:b,]\n");
+    }
+
     // --- Helper methods ---
 
     private void assertBothParsersAccept(String input) {
@@ -340,5 +509,34 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
             }
         }
         return false;
+    }
+
+    private void assertBothParsersReject(String input) {
+        boolean referenceParserAccepts = referenceParserAccepts(input);
+        PsiFile file = createFile("test.table", input);
+        boolean pluginParserAccepts = hasNoParseErrors(file);
+
+        String psiTree = toParseTreeText(file, skipSpaces(), includeRanges());
+
+        if (referenceParserAccepts && !pluginParserAccepts) {
+            fail("Reference parser accepts but plugin parser rejects.\n" +
+                 "Input: " + input.replace("\n", "\\n") + "\n" +
+                 "PSI tree:\n" + psiTree);
+        }
+
+        if (!referenceParserAccepts && pluginParserAccepts) {
+            fail("Reference parser rejects but plugin parser accepts.\n" +
+                 "Input: " + input.replace("\n", "\\n") + "\n" +
+                 "PSI tree:\n" + psiTree);
+        }
+
+        // For reject tests, verify both parsers actually reject (neither accepts)
+        if (referenceParserAccepts || pluginParserAccepts) {
+            fail("Expected both parsers to reject, but at least one accepts.\n" +
+                 "Input: " + input.replace("\n", "\\n") + "\n" +
+                 "Reference parser accepts: " + referenceParserAccepts + "\n" +
+                 "Plugin parser accepts: " + pluginParserAccepts + "\n" +
+                 "PSI tree:\n" + psiTree);
+        }
     }
 }
