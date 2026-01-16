@@ -97,9 +97,9 @@ SINGLE_QUOTED_ELEMENT_CONTENT=[^\'\r\n,\]\}]*
 <COMPOUND> {
     \]                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACKET; }
     \}                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACE; }
-    // Matched quotes - enter quoted state only if closing quote exists before delimiter
-    \"  / {DOUBLE_QUOTED_ELEMENT_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
-    \'  / {SINGLE_QUOTED_ELEMENT_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
+    // Matched quotes - enter quoted state only if closing quote exists on same line
+    \"  / {DOUBLE_QUOTED_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
+    \'  / {SINGLE_QUOTED_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
     // Unmatched quotes - treat as unquoted string value
     \" {DOUBLE_QUOTED_ELEMENT_CONTENT} / [,\]\}\r\n]  { return TableTestTypes.STRING_VALUE; }
     \' {SINGLE_QUOTED_ELEMENT_CONTENT} / [,\]\}\r\n]  { return TableTestTypes.STRING_VALUE; }

@@ -1,6 +1,8 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Quoted strings containing delimiters (commas, brackets, braces) inside compound structures were incorrectly parsed
 
 ## [0.1.0] - 2026-01-16
 ### Added

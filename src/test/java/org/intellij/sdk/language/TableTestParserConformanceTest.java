@@ -101,6 +101,193 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
         assertBothParsersAccept("header\n'{'\n");
     }
 
+    // --- Patterns from TableParserTest.java ---
+
+    public void testInlineCommentAtEndOfRow() {
+        // from shouldIgnoreComments: 4 //  | 5 - comment starts at //
+        assertBothParsersAccept("a | b\n4 // | 5\n");
+    }
+
+    public void testValueStartingWithSlashSlash() {
+        // from shouldIgnoreComments: 6 | // 7
+        assertBothParsersAccept("a | b\n6 | // 7\n");
+    }
+
+    public void testValueEndingWithSlashSlash() {
+        // from shouldIgnoreComments: 8 | 9 //
+        assertBothParsersAccept("a | b\n8 | 9 //\n");
+    }
+
+    public void testQuotedSlashSlash() {
+        // from shouldIgnoreComments: '//2' | 3
+        assertBothParsersAccept("a | b\n'//2' | 3\n");
+    }
+
+    public void testTimestampInList() {
+        // from shouldThrowExceptionOnParsingErrors
+        // [2025-08-01T00:00:00] contains colons - might be parsed as map
+        assertBothParsersAccept("header\n[2025-08-01T00:00:00]\n");
+    }
+
+    public void testTimestampValue() {
+        // Simple timestamp without brackets
+        assertBothParsersAccept("header\n2025-08-01T00:00:00\n");
+    }
+
+    public void testListWithNestedLists() {
+        // from shouldCaptureLists: [[a], [b], [c]]
+        assertBothParsersAccept("header\n[[a], [b], [c]]\n");
+    }
+
+    public void testListWithSet() {
+        // from shouldCaptureLists: [{a,b}, c]
+        assertBothParsersAccept("header\n[{a,b}, c]\n");
+    }
+
+    public void testListWithMap() {
+        // from shouldCaptureLists: [[a:b], c]
+        assertBothParsersAccept("header\n[[a:b], c]\n");
+    }
+
+    public void testSetWithList() {
+        // from shouldCaptureSets: {[a],[b],[b]}
+        assertBothParsersAccept("header\n{[a],[b],[b]}\n");
+    }
+
+    public void testSetWithMap() {
+        // from shouldCaptureSets: {[a:b], [a:b]}
+        assertBothParsersAccept("header\n{[a:b], [a:b]}\n");
+    }
+
+    public void testNestedMap() {
+        // from shouldCaptureMaps: [A:[a:1], B:[b:2], C:[c:3]]
+        assertBothParsersAccept("header\n[A:[a:1], B:[b:2], C:[c:3]]\n");
+    }
+
+    public void testMapWithEmptyMap() {
+        // from shouldCaptureMaps: [m:[:], s:a]
+        assertBothParsersAccept("header\n[m:[:], s:a]\n");
+    }
+
+    public void testMapWithSet() {
+        // from shouldCaptureMaps: [s:{a,b}, t:{c}]
+        assertBothParsersAccept("header\n[s:{a,b}, t:{c}]\n");
+    }
+
+    public void testMapWithList() {
+        // from shouldCaptureMaps: [l:[a,b], i:[c]]
+        assertBothParsersAccept("header\n[l:[a,b], i:[c]]\n");
+    }
+
+    public void testMapWithQuotedValue() {
+        // from shouldCaptureMaps: [q:"a,b", u:c]
+        assertBothParsersAccept("header\n[q:\"a,b\", u:c]\n");
+    }
+
+    public void testScenarioColumn() {
+        // Standard scenario column with multiple pipes
+        assertBothParsersAccept("Scenario | Input | Result?\nTest | value | expected\n");
+    }
+
+    public void testBlankLinesWithWhitespace() {
+        // from shouldIgnoreBlankLines: lines with only whitespace
+        assertBothParsersAccept("a | b\n   \n1 | 2\n");
+    }
+
+    public void testEmptyQuotedStringInCell() {
+        // empty quoted strings
+        assertBothParsersAccept("header\n''\n");
+    }
+
+    public void testValueWithSpaces() {
+        // from shouldCaptureStrings: abc def
+        assertBothParsersAccept("header\nabc def\n");
+    }
+
+    public void testQuotedValueWithSpaces() {
+        // from shouldCaptureStrings: ' a b c '
+        assertBothParsersAccept("header\n' a b c '\n");
+    }
+
+    public void testMixedContentSet() {
+        // from shouldCaptureSets: {{},a,a,{}}
+        assertBothParsersAccept("header\n{{},a,a,{}}\n");
+    }
+
+    public void testNestedSet() {
+        // from shouldCaptureSets: {{a}, {b}, {b}}
+        assertBothParsersAccept("header\n{{a}, {b}, {b}}\n");
+    }
+
+    // --- Quoted strings with special characters inside compounds ---
+
+    public void testMapWithSingleQuotedValueContainingComma() {
+        // [q:'a,b', u:c] - single quoted value containing comma
+        assertBothParsersAccept("header\n[q:'a,b', u:c]\n");
+    }
+
+    public void testListWithDoubleQuotedValueContainingComma() {
+        // ["a,b", c] - double quoted value containing comma in list
+        assertBothParsersAccept("header\n[\"a,b\", c]\n");
+    }
+
+    public void testListWithSingleQuotedValueContainingComma() {
+        // ['a,b', c] - single quoted value containing comma in list
+        assertBothParsersAccept("header\n['a,b', c]\n");
+    }
+
+    public void testSetWithDoubleQuotedValueContainingComma() {
+        // {"a,b", c} - double quoted value containing comma in set
+        assertBothParsersAccept("header\n{\"a,b\", c}\n");
+    }
+
+    public void testSetWithSingleQuotedValueContainingComma() {
+        // {'a,b', c} - single quoted value containing comma in set
+        assertBothParsersAccept("header\n{'a,b', c}\n");
+    }
+
+    public void testQuotedValueContainingColon() {
+        // [key:'a:b'] - quoted value containing colon
+        assertBothParsersAccept("header\n[key:'a:b']\n");
+    }
+
+    public void testQuotedValueContainingBracket() {
+        // [key:'a]b'] - quoted value containing closing bracket
+        assertBothParsersAccept("header\n[key:'a]b']\n");
+    }
+
+    public void testQuotedValueContainingBrace() {
+        // {'a}b', c} - quoted value containing closing brace
+        assertBothParsersAccept("header\n{'a}b', c}\n");
+    }
+
+    // More targeted tests to understand scope of issue
+
+    public void testListWithQuotedCommaNotFirstElement() {
+        // [a, "b,c"] - quoted comma NOT as first element in list
+        assertBothParsersAccept("header\n[a, \"b,c\"]\n");
+    }
+
+    public void testSetWithQuotedCommaNotFirstElement() {
+        // {a, 'b,c'} - quoted comma NOT as first element in set
+        assertBothParsersAccept("header\n{a, 'b,c'}\n");
+    }
+
+    public void testListWithQuotedClosingBracket() {
+        // ['a]b'] - quoted closing bracket in list
+        assertBothParsersAccept("header\n['a]b']\n");
+    }
+
+    public void testSetWithQuotedClosingBrace() {
+        // {'a}b'} - quoted closing brace in set (single element)
+        assertBothParsersAccept("header\n{'a}b'}\n");
+    }
+
+    public void testSimpleMapWithQuotedValue() {
+        // [key:'value'] - simple map with quoted value (no special chars)
+        assertBothParsersAccept("header\n[key:'value']\n");
+    }
+
     // --- Helper methods ---
 
     private void assertBothParsersAccept(String input) {
