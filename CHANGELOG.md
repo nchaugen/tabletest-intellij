@@ -1,6 +1,8 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+### Changed
+- Expected header columns are now bold by default
 ### Fixed
 - Quoted strings containing delimiters (commas, brackets, braces) inside compound structures were incorrectly parsed
 

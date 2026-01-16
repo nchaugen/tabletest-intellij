@@ -43,6 +43,9 @@
                 order="first"
                 implementation="io.github.nchaugen.tabletest.language.TableTestRowMover"/>
 
+        <additionalTextAttributes scheme="Default" file="colorSchemes/TableTestDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/TableTestDefault.xml"/>
+
     </extensions>
 
 </idea-plugin>
