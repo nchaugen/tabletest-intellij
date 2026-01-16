@@ -12,6 +12,7 @@ Features:
 - Syntax highlighting for TableTest tables
 - Auto-injection of TableTest language for `@TableTest` annotations in Java and Kotlin files
 - Shortcut for toggling commenting of selected lines
+- Move row up/down with keyboard shortcuts
 
 <!-- Plugin description end -->
 

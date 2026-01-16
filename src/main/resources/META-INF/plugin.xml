@@ -39,6 +39,10 @@
                 language="TableTest"
                 implementationClass="io.github.nchaugen.tabletest.language.TableTestCommenter"/>
 
+        <statementUpDownMover
+                order="first"
+                implementation="io.github.nchaugen.tabletest.language.TableTestRowMover"/>
+
     </extensions>
 
 </idea-plugin>

@@ -1,6 +1,8 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+### Added
+- Move row up/down with keyboard shortcuts (Cmd+Shift+Up/Down on Mac, Alt+Shift+Up/Down on Windows/Linux)
 ### Fixed
 - First-line comments were incorrectly parsed as headers
 - Unpaired quotes in unquoted strings were incorrectly shown as illegal
