@@ -1,5 +1,6 @@
 package io.github.nchaugen.tabletest.language;
 
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes;
 import com.intellij.psi.TokenType;
@@ -31,14 +32,20 @@ SINGLE_QUOTED_STRING=[^\']+
 MAP_KEY_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^|,:\[\]\r\n]*[^|,:\[\] \t\r\n])?
 UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\n])?
 
-%state HEADER_ROW, DATA, DATA_ROW, COMMENT_LINE, DOUBLE_QUOTED, SINGLE_QUOTED, COMPOUND
+%state HEADER_ROW, DATA, DATA_ROW, COMMENT_LINE, INITIAL_COMMENT_LINE, DOUBLE_QUOTED, SINGLE_QUOTED, COMPOUND
 
 %%
 
 <YYINITIAL> {
+    "//"            { yybegin(INITIAL_COMMENT_LINE); return TableTestTypes.LINE_COMMENT; }
     {UNQUOTED_CHAR} { yypushback(1); yybegin(HEADER_ROW); }
     {CRLF}          { return TableTestTypes.INITIAL_NEWLINE; }
  }
+
+<INITIAL_COMMENT_LINE> {
+    {COMMENT} { return TableTestTypes.COMMENT; }
+    {CRLF}    { yybegin(YYINITIAL); return TableTestTypes.NEWLINE; }
+}
 
 <HEADER_ROW> {
     {UNQUOTED_STRING}\? { return TableTestTypes.OUTPUT_HEADER; }

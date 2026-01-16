@@ -1,0 +1,12 @@
+TableTest File(0,23)
+  TableTestCommentLineImpl(COMMENT_LINE)(0,11)
+    PsiElement(//)('//')(0,2)
+    PsiElement(COMMENT)(' comment')(2,10)
+    PsiElement(\n)('\n')(10,11)
+  TableTestHeaderRowImpl(HEADER_ROW)(11,18)
+    TableTestHeaderImpl(HEADER)(11,17)
+      PsiElement(INPUT_HEADER)('header')(11,17)
+    PsiElement(\n)('\n')(17,18)
+  PsiElement(STRING_VALUE)('value')(18,23)
+  PsiErrorElement:'\n' or '|' expected(23,23)
+    <empty list>

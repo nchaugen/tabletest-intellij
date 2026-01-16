@@ -1,6 +1,8 @@
 # TableTest Plugin Changelog
 
 ## [Unreleased]
+### Fixed
+- First-line comments were incorrectly parsed as headers
 
 ## [0.0.10] - 2025-12-08
 ### Security

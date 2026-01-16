@@ -5,7 +5,7 @@
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/27334-tabletest.svg)](https://plugins.jetbrains.com/plugin/27334-tabletest)
 
 <!-- Plugin description -->
-Adds support for the table language used in [TableTest](https://github.com/nchaugen/tabletest) for data-driven testing in JUnit 5.
+Adds support for the table language used in [TableTest](https://github.com/nchaugen/tabletest) for data-driven testing in JUnit.
 
 Features:
 - Auto-formatting TableTest table to align columns
