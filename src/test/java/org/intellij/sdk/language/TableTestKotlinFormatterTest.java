@@ -16,13 +16,13 @@ public class TableTestKotlinFormatterTest extends TableTestFormatterTestCase {
         myFixture.checkResultByFile("DefaultTestData.kt");
     }
 
-    // Kotlin formatter tests with comments and blank lines are disabled due to an
-    // IntelliJ test framework bug. When using LightJavaCodeInsightFixtureTestCase
-    // with setCaresAboutInjection(true), formatting injected content in Kotlin raw
-    // strings corrupts the text due to incorrect offset mapping. For example,
-    // "one:1" becomes "o ne:1". This is a test-only issue - formatting works
-    // correctly in the actual editor.
-    // The equivalent test for Java text blocks works correctly.
+    // Kotlin formatter tests with blank lines are disabled due to an IntelliJ test
+    // framework bug. When using LightJavaCodeInsightFixtureTestCase with
+    // setCaresAboutInjection(true), formatting injected content in Kotlin raw strings
+    // with blank lines produces incorrect results. This is a test-only issue -
+    // formatting works correctly in the actual editor.
+    // Note: Tests with comments only (no blank lines) now pass after fixing comment
+    // alignment. The issue is specifically with blank lines.
 
 //    public void testKotlinFormatterWithBlankLines() {
 //        myFixture.setCaresAboutInjection(true);
@@ -34,18 +34,18 @@ public class TableTestKotlinFormatterTest extends TableTestFormatterTestCase {
 //            );
 //        myFixture.checkResultByFile("DefaultTestDataWithBlankLines.kt");
 //    }
-//
-//    public void testKotlinFormatterWithComments() {
-//        myFixture.setCaresAboutInjection(true);
-//        myFixture.configureByFile("FormatterTestDataWithComments.kt");
-//        WriteCommandAction.writeCommandAction(getProject())
-//            .run(() ->
-//                CodeStyleManager.getInstance(getProject())
-//                    .reformat(myFixture.getFile())
-//            );
-//        myFixture.checkResultByFile("DefaultTestDataWithComments.kt");
-//    }
-//
+
+    public void testKotlinFormatterWithComments() {
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByFile("FormatterTestDataWithComments.kt");
+        WriteCommandAction.writeCommandAction(getProject())
+            .run(() ->
+                CodeStyleManager.getInstance(getProject())
+                    .reformat(myFixture.getFile())
+            );
+        myFixture.checkResultByFile("DefaultTestDataWithComments.kt");
+    }
+
 //    public void testKotlinFormatterWithBlankLinesAndComments() {
 //        myFixture.setCaresAboutInjection(true);
 //        myFixture.configureByFile("FormatterTestDataWithBlankLinesAndComments.kt");
@@ -201,6 +201,113 @@ public class TableTestKotlinFormatterTest extends TableTestFormatterTestCase {
                 )
                 fun test() {
                 }
+            }
+            """);
+    }
+
+    public void testKotlinFormatterMinimalBlankLine() {
+        // Minimal test case to isolate the blank line bug:
+        // Pipe alignment spans across a blank line - does offset mapping break?
+        format(
+            "Test.kt", """
+                class Test {
+                    //language=tabletest
+                    @TableTest(
+                        \"""
+                        a|b
+
+                        c|d<caret>
+                        \"""
+                    )
+                    fun test() {}
+                }
+                """
+        );
+        myFixture.checkResult("""
+            class Test {
+                //language=tabletest
+                @TableTest(
+                    \"""
+                    a | b
+
+                    c | d
+                    \"""
+                )
+                fun test() {}
+            }
+            """);
+    }
+
+    public void testKotlinFormatterAlignsRowImmediatelyAfterComment() {
+        // Regression test: the row immediately following a comment line must align
+        // with rows before the comment. Previously, only the first row after a comment
+        // was misaligned; subsequent rows aligned correctly with each other.
+        format(
+            "Test.kt", """
+                class Test {
+                    //language=tabletest
+                    @TableTest(
+                        \"""
+                        header1|header2
+                        a|b
+                        // comment
+                        c|d
+                        e|f<caret>
+                        \"""
+                    )
+                    fun test() {}
+                }
+                """
+        );
+        myFixture.checkResult("""
+            class Test {
+                //language=tabletest
+                @TableTest(
+                    \"""
+                    header1 | header2
+                    a       | b
+                    // comment
+                    c       | d
+                    e       | f
+                    \"""
+                )
+                fun test() {}
+            }
+            """);
+    }
+
+    public void testKotlinFormatterMultipleRowsWithBlankLine() {
+        // More rows to see if volume matters
+        format(
+            "Test.kt", """
+                class Test {
+                    //language=tabletest
+                    @TableTest(
+                        \"""
+                        header1|header2|header3
+                        a|b|c
+                        d|e|f
+
+                        g|h|i<caret>
+                        \"""
+                    )
+                    fun test() {}
+                }
+                """
+        );
+        myFixture.checkResult("""
+            class Test {
+                //language=tabletest
+                @TableTest(
+                    \"""
+                    header1 | header2 | header3
+                    a       | b       | c
+                    d       | e       | f
+
+                    g       | h       | i
+                    \"""
+                )
+                fun test() {}
             }
             """);
     }

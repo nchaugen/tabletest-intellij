@@ -6,6 +6,9 @@
 - Data rows now align with header row position in Kotlin tables, allowing manual control of table indentation
 ### Fixed
 - Quoted strings containing delimiters (commas, brackets, braces) inside compound structures were incorrectly parsed
+- Comments now align with header and data rows in Kotlin raw strings (previously comments lost their indentation)
+- Data rows following comments now re-align correctly in Java text blocks (previously rows with extra indentation stayed misaligned)
+- Lines with varying input indentation now normalize to a consistent alignment position
 
 ## [0.1.0] - 2026-01-16
 ### Added

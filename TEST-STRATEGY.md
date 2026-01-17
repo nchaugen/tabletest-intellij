@@ -77,7 +77,9 @@ Row alignment and indentation are context-dependent because Java text blocks and
 
 ### Kotlin Formatter Test Framework Bug
 
-Tests for formatting injected content in Kotlin raw strings containing blank lines or comments are disabled due to a bug in `LightJavaCodeInsightFixtureTestCase`. The test framework incorrectly maps offsets when formatting Kotlin raw strings, corrupting the text.
+Tests for formatting injected content in Kotlin raw strings **containing blank lines** are disabled due to a bug in `LightJavaCodeInsightFixtureTestCase`. The test framework produces incorrect results when formatting Kotlin raw strings with blank lines.
+
+**Tests with comments only (no blank lines) work correctly** after fixing a bug in the plugin's formatter where comment lines weren't participating in first-column alignment.
 
 **This is a test framework limitation only** – formatting works correctly in the actual editor.
 

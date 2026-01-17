@@ -52,7 +52,8 @@ class TableTestBlock(
                         child,
                         Wrap.createWrap(WrapType.NONE, false),
                         null,
-                        spacingBuilder
+                        spacingBuilder,
+                        firstColumnAlignment
                     )
                 }
                 blocks.add(block)

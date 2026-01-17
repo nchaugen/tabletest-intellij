@@ -33,7 +33,7 @@ class TableTestFormattingModelBuilder : FormattingModelBuilder {
         SpacingBuilder(settings, TableTestLanguage)
             .around(PIPE).spaces(1)
             .before(LINE_COMMENT).spaces(0)
-            .after(LINE_COMMENT).spaces(1)
+            .after(LINE_COMMENT).spaces(0)  // COMMENT token includes original spacing
             .before(COLON).spaces(0)
             .after(COLON).spaces(1)
             .before(COMMA).spaces(0)

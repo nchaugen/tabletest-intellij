@@ -164,4 +164,25 @@ public class TableTestTableFormatterTest extends TableTestFormatterTestCase {
             """);
     }
 
+    public void testFormatterAlignsRowImmediatelyAfterComment() {
+        // Regression test: the row immediately following a comment line must align
+        // with rows before the comment.
+        format(
+            "test.table", """
+                header1|header2
+                a|b
+                // comment
+                c|d
+                e|f
+                """
+        );
+        myFixture.checkResult("""
+            header1 | header2
+            a       | b
+            // comment
+            c       | d
+            e       | f
+            """);
+    }
+
 }
