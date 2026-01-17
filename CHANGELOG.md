@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-01-17
+
 ### Changed
 
 - Expected header columns are now bold by default
@@ -25,13 +27,13 @@
 - First-line comments were incorrectly parsed as headers
 - Unpaired quotes in unquoted strings were incorrectly shown as illegal
 
-## 0.0.10 - 2025-12-08
+## [0.0.10] - 2025-12-08
 
 ### Security
 
 - Bumped dependencies
 
-## 0.0.9 - 2025-06-08
+## [0.0.9] - 2025-06-08
 
 ### Added
 
@@ -41,14 +43,14 @@
 
 - Allow comma and colon in unquoted values except when elements in a compound value
 
-## 0.0.8 - 2025-06-01
+## [0.0.8] - 2025-06-01
 
 ### Fixed
 
 - Allow first data cell to be blank
 - Allow comments to be empty
 
-## 0.0.7 - 2025-05-22
+## [0.0.7] - 2025-05-22
 
 ### Added
 
@@ -58,7 +60,7 @@
 
 - Allow first data cell to be a list or quoted string
 
-## 0.0.6 - 2025-05-13
+## [0.0.6] - 2025-05-13
 
 ### Fixed
 
@@ -66,7 +68,7 @@
 - Indentation when adding data rows to a TableTest file (`*.table`)
 - Improved alignment in Kotlin multi-line strings
 
-## 0.0.5 - 2025-05-11
+## [0.0.5] - 2025-05-11
 
 ### Added
 
@@ -76,25 +78,25 @@
 
 - Bumped dependencies
 
-## 0.0.4 - 2025-05-11
+## [0.0.4] - 2025-05-11
 
 ### Fixed
 
 - Syntax highlighting for non-comment occurrence of '//'
 
-## 0.0.3 - 2025-05-02
+## [0.0.3] - 2025-05-02
 
 ### Added
 
 - General support for empty lines anywhere in table
 
-## 0.0.2 - 2025-04-26
+## [0.0.2] - 2025-04-26
 
 ### Added
 
 - Allowing initial empty line to better support Kotlin multiline strings
 
-## 0.0.1 - 2025-03-18
+## [0.0.1] - 2025-03-18
 
 ### Added
 
@@ -102,5 +104,16 @@
 - Syntax highlighting in TableTest tables
 - Auto-injection of TableTest language for Java `@TableTest` annotations
 
-[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/nchaugen/tabletest-intellij/releases/tag/v0.1.0
+[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/nchaugen/tabletest-intellij/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.10...v0.1.0
+[0.0.10]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.9...v0.0.10
+[0.0.9]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.8...v0.0.9
+[0.0.8]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.7...v0.0.8
+[0.0.7]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.6...v0.0.7
+[0.0.6]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.5...v0.0.6
+[0.0.5]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.4...v0.0.5
+[0.0.4]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.3...v0.0.4
+[0.0.3]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.2...v0.0.3
+[0.0.2]: https://github.com/nchaugen/tabletest-intellij/compare/v0.0.1...v0.0.2
+[0.0.1]: https://github.com/nchaugen/tabletest-intellij/commits/v0.0.1
