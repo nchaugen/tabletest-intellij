@@ -2,7 +2,6 @@
 set -e
 
 GRADLE_PROPERTIES="gradle.properties"
-CHANGELOG="CHANGELOG.md"
 
 # Read current version from gradle.properties
 current_version=$(grep "^pluginVersion" "$GRADLE_PROPERTIES" | sed 's/.*= *//')
@@ -13,7 +12,7 @@ if [ -z "$1" ]; then
     echo "Using version from gradle.properties: $version"
     updated_files=false
 else
-    # Argument provided - update gradle.properties and changelog
+    # Argument provided - update gradle.properties
     version="$1"
     echo "Updating version from $current_version to $version"
 
@@ -23,17 +22,6 @@ else
         sed -i "s/^pluginVersion *=.*/pluginVersion = $version/" "$GRADLE_PROPERTIES"
     fi
     echo "Updated gradle.properties"
-
-    # Update changelog - insert version header after [Unreleased]
-    release_date=$(date +%Y-%m-%d)
-    version_header="## [$version] - $release_date"
-
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/^## \[Unreleased\]$/## [Unreleased]\n\n$version_header/" "$CHANGELOG"
-    else
-        sed -i "s/^## \[Unreleased\]$/## [Unreleased]\n\n$version_header/" "$CHANGELOG"
-    fi
-    echo "Updated CHANGELOG.md with $version_header"
 
     updated_files=true
 fi
@@ -53,12 +41,12 @@ echo ""
 git status --short
 
 echo ""
-read -p "Create tag $tag? (y/n) " -n 1 -r
+read -p "Release $tag? (y/n) " -n 1 -r
 echo ""
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     if [ "$updated_files" = true ]; then
-        git add "$GRADLE_PROPERTIES" "$CHANGELOG"
+        git add "$GRADLE_PROPERTIES"
         git commit -m "Bump version to $version"
     fi
 
@@ -66,11 +54,13 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo ""
     echo "Created tag: $tag"
     echo ""
-    echo "To push the tag and trigger the release workflow:"
-    echo "  git push origin main && git push origin $tag"
+    echo "Pushing to remote..."
+    git push origin main && git push origin "$tag"
+    echo ""
+    echo "Successfully pushed tag $tag - release workflow will start shortly"
 else
     if [ "$updated_files" = true ]; then
-        git checkout "$GRADLE_PROPERTIES" "$CHANGELOG"
+        git checkout "$GRADLE_PROPERTIES"
         echo "Reverted changes"
     fi
     echo "Aborted"

@@ -161,6 +161,10 @@ tasks {
     compileJava {
         dependsOn(generateLexer, generateParser)
     }
+
+    publishPlugin {
+        dependsOn(patchChangelog)
+    }
 }
 
 intellijPlatformTesting {
