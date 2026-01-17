@@ -18,19 +18,25 @@ class TableTestRowBlock(
     alignment: Alignment?,
     private val spacingBuilder: SpacingBuilder?,
     private val pipeAlignments: List<Alignment>,
-    private val injectedInKotlin: Boolean
+    private val firstColumnAlignment: Alignment
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {
         val blocks: MutableList<Block> = ArrayList()
         var child = node.firstChildNode
         var columnIndex = 0
+        var isFirstCell = true
 
         while (child != null) {
             if (child.elementType !in listOf(TokenType.WHITE_SPACE, TableTestTypes.NEWLINE)) {
                 val alignment = if (child.elementType == TableTestTypes.PIPE) {
-                    pipeAlignments.getOrNull(columnIndex).also { columnIndex++}
-                } else Alignment.createAlignment()
+                    pipeAlignments.getOrNull(columnIndex).also { columnIndex++ }
+                } else if (isFirstCell) {
+                    isFirstCell = false
+                    firstColumnAlignment
+                } else {
+                    Alignment.createAlignment()
+                }
                 val block = TableTestCellBlock(
                     child,
                     Wrap.createWrap(WrapType.NONE, false),
@@ -49,7 +55,5 @@ class TableTestRowBlock(
 
     override fun isLeaf(): Boolean = node.firstChildNode == null
 
-    override fun getIndent(): Indent? =
-        if (injectedInKotlin) Indent.getNormalIndent()
-        else Indent.getNoneIndent()
+    override fun getIndent(): Indent? = Indent.getNoneIndent()
 }

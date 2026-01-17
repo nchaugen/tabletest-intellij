@@ -13,8 +13,7 @@ class TableTestCommentLineBlock(
     node: ASTNode,
     wrap: Wrap?,
     alignment: Alignment?,
-    private val spacingBuilder: SpacingBuilder?,
-    private val injectedInKotlin: Boolean
+    private val spacingBuilder: SpacingBuilder?
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {
@@ -26,7 +25,5 @@ class TableTestCommentLineBlock(
 
     override fun isLeaf(): Boolean = true
 
-    override fun getIndent(): Indent? =
-        if (injectedInKotlin) Indent.getNormalIndent()
-        else Indent.getNoneIndent()
+    override fun getIndent(): Indent? = Indent.getNoneIndent()
 }

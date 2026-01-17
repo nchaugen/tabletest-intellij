@@ -20,8 +20,7 @@ class TableTestBlock(
     node: ASTNode,
     wrap: Wrap?,
     alignment: Alignment?,
-    private val spacingBuilder: SpacingBuilder?,
-    private val injectedInKotlin: Boolean
+    private val spacingBuilder: SpacingBuilder?
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {
@@ -31,6 +30,9 @@ class TableTestBlock(
             .getChildren(TokenSet.create(HEADER_ROW))
             .flatMap { it.getChildren(TokenSet.create(PIPE)).toList<ASTNode>() }
             .map { Alignment.createAlignment(true) }
+
+        // Create alignment for first column to align header with data rows
+        val firstColumnAlignment: Alignment = Alignment.createAlignment(true)
 
         var child = node.firstChildNode
 
@@ -43,15 +45,14 @@ class TableTestBlock(
                         null,
                         spacingBuilder,
                         pipeAlignments,
-                        injectedInKotlin
+                        firstColumnAlignment
                     )
                 } else {
                     TableTestCommentLineBlock(
                         child,
                         Wrap.createWrap(WrapType.NONE, false),
                         null,
-                        spacingBuilder,
-                        injectedInKotlin
+                        spacingBuilder
                     )
                 }
                 blocks.add(block)

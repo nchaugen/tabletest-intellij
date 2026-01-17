@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Changed
 - Expected header columns are now bold by default
+- Data rows now align with header row position in Kotlin tables, allowing manual control of table indentation
 ### Fixed
 - Quoted strings containing delimiters (commas, brackets, braces) inside compound structures were incorrectly parsed
 
