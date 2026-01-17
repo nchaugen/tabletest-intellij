@@ -1,61 +1,26 @@
 package org.intellij.sdk.language;
 
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-
 public class TableTestKotlinFormatterTest extends TableTestFormatterTestCase {
 
     public void testKotlinFormatter() {
-        myFixture.setCaresAboutInjection(true);
-        myFixture.configureByFile("FormatterTestData.kt");
-        WriteCommandAction.writeCommandAction(getProject())
-            .run(() ->
-                CodeStyleManager.getInstance(getProject())
-                    .reformat(myFixture.getFile())
-            );
+        formatFile("FormatterTestData.kt");
         myFixture.checkResultByFile("DefaultTestData.kt");
     }
 
-    // Kotlin formatter tests with blank lines are disabled due to an IntelliJ test
-    // framework bug. When using LightJavaCodeInsightFixtureTestCase with
-    // setCaresAboutInjection(true), formatting injected content in Kotlin raw strings
-    // with blank lines produces incorrect results. This is a test-only issue -
-    // formatting works correctly in the actual editor.
-    // Note: Tests with comments only (no blank lines) now pass after fixing comment
-    // alignment. The issue is specifically with blank lines.
-
-//    public void testKotlinFormatterWithBlankLines() {
-//        myFixture.setCaresAboutInjection(true);
-//        myFixture.configureByFile("FormatterTestDataWithBlankLines.kt");
-//        WriteCommandAction.writeCommandAction(getProject())
-//            .run(() ->
-//                CodeStyleManager.getInstance(getProject())
-//                    .reformat(myFixture.getFile())
-//            );
-//        myFixture.checkResultByFile("DefaultTestDataWithBlankLines.kt");
-//    }
+    public void testKotlinFormatterWithBlankLines() {
+        formatFile("FormatterTestDataWithBlankLines.kt");
+        myFixture.checkResultByFile("DefaultTestDataWithBlankLines.kt");
+    }
 
     public void testKotlinFormatterWithComments() {
-        myFixture.setCaresAboutInjection(true);
-        myFixture.configureByFile("FormatterTestDataWithComments.kt");
-        WriteCommandAction.writeCommandAction(getProject())
-            .run(() ->
-                CodeStyleManager.getInstance(getProject())
-                    .reformat(myFixture.getFile())
-            );
+        formatFile("FormatterTestDataWithComments.kt");
         myFixture.checkResultByFile("DefaultTestDataWithComments.kt");
     }
 
-//    public void testKotlinFormatterWithBlankLinesAndComments() {
-//        myFixture.setCaresAboutInjection(true);
-//        myFixture.configureByFile("FormatterTestDataWithBlankLinesAndComments.kt");
-//        WriteCommandAction.writeCommandAction(getProject())
-//            .run(() ->
-//                CodeStyleManager.getInstance(getProject())
-//                    .reformat(myFixture.getFile())
-//            );
-//        myFixture.checkResultByFile("DefaultTestDataWithBlankLinesAndComments.kt");
-//    }
+    public void testKotlinFormatterWithBlankLinesAndComments() {
+        formatFile("FormatterTestDataWithBlankLinesAndComments.kt");
+        myFixture.checkResultByFile("DefaultTestDataWithBlankLinesAndComments.kt");
+    }
 
     public void testKotlinFormatterAlignsTableWithCaretInsideTable() {
         // When caret is inside the table in Kotlin code, reformat command will

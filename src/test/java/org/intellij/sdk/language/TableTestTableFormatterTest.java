@@ -1,22 +1,9 @@
 package org.intellij.sdk.language;
 
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-
-import java.util.List;
-
 public class TableTestTableFormatterTest extends TableTestFormatterTestCase {
 
     public void testTableFormatter() {
-        myFixture.configureByFile("FormatterTestData.table");
-        WriteCommandAction.writeCommandAction(getProject())
-            .run(() ->
-                CodeStyleManager.getInstance(getProject())
-                    .reformatText(
-                        myFixture.getFile(),
-                        List.of(myFixture.getFile().getTextRange())
-                    )
-            );
+        formatFile("FormatterTestData.table");
         myFixture.checkResultByFile("DefaultTestData.table");
     }
 

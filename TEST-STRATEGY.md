@@ -75,15 +75,15 @@ Row alignment and indentation are context-dependent because Java text blocks and
 
 ## Known Limitations
 
-### Kotlin Formatter Test Framework Bug
+### CodeStyleManager.reformat() Bug
 
-Tests for formatting injected content in Kotlin raw strings **containing blank lines** are disabled due to a bug in `LightJavaCodeInsightFixtureTestCase`. The test framework produces incorrect results when formatting Kotlin raw strings with blank lines.
+`CodeStyleManager.reformat()` corrupts output when formatting injected content with inconsistent indentation (i.e., lines at different indent levels). This affects both Java text blocks and Kotlin raw strings.
 
-**Tests with comments only (no blank lines) work correctly** after fixing a bug in the plugin's formatter where comment lines weren't participating in first-column alignment.
+**Workaround**: Tests use `CodeStyleManager.reformatText()` instead, which works correctly. See `TableTestFormatterTestCase.reformatTable()`.
 
 **This is a test framework limitation only** – formatting works correctly in the actual editor.
 
-See `kotlin-formatter-test-bug-report.md` for details.
+See the [JetBrains bug report](https://platform.jetbrains.com/t/codestylemanager-reformat-produces-corrupted-output-for-injected-content-with-inconsistent-indentation/3504) for details.
 
 ## Adding New Tests
 
@@ -97,4 +97,4 @@ When adding tests for new functionality:
    - Add comprehensive tests using `.table` files for the core logic
    - Add focused integration tests for each context (Java, Kotlin) covering only the context-specific aspects
 
-4. **Consider the Kotlin test limitation**: If testing formatter behaviour with blank lines or comments in Kotlin, expect the test framework bug to apply
+4. **Use the base class**: Extend `TableTestFormatterTestCase` for formatter tests to inherit the `reformatText()` workaround

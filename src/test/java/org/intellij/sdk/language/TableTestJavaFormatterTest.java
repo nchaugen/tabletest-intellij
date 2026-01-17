@@ -1,18 +1,9 @@
 package org.intellij.sdk.language;
 
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-
 public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
 
     public void testJavaFormatter() {
-        myFixture.setCaresAboutInjection(true);
-        myFixture.configureByFile("FormatterTestData.java");
-        WriteCommandAction.writeCommandAction(getProject())
-            .run(() ->
-                CodeStyleManager.getInstance(getProject())
-                    .reformat(myFixture.getFile())
-            );
+        formatFile("FormatterTestData.java");
         myFixture.checkResultByFile("DefaultTestData.java");
     }
 

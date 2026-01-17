@@ -59,7 +59,7 @@ See [TEST-STRATEGY.md](TEST-STRATEGY.md) for the full testing strategy.
 
 Test data in `src/test/testData/` - pairs of input files and expected outputs.
 
-**Known test limitation**: Kotlin formatter tests with blank lines/comments are disabled due to a `LightJavaCodeInsightFixtureTestCase` bug. Formatting works correctly in the editor; this is a test framework issue only.
+**Known test framework bug**: `CodeStyleManager.reformat()` corrupts output when injected content has inconsistent indentation. Tests use `reformatText()` as a workaround. See the [JetBrains bug report](https://platform.jetbrains.com/t/codestylemanager-reformat-produces-corrupted-output-for-injected-content-with-inconsistent-indentation/3504) for details.
 
 ## Plugin Configuration
 
