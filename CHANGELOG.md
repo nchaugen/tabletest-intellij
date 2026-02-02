@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Treat `@Converter` methods as used in both Java and Kotlin by the unused declaration/symbol inspections
+
 ## [0.2.0] - 2026-01-17
 
 ### Changed
