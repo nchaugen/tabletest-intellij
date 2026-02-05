@@ -1,12 +1,22 @@
 <LanguageInjectionConfiguration>
     <injection language="TableTest" injector-id="java">
-        <display-name>TableTest.value (io.github.nchaugen.junit.tabletest)</display-name>
+        <display-name>TableTest.value (io.github.nchaugen.tabletest.junit)</display-name>
         <single-file value="false"/>
         <place><![CDATA[
         psiMethod()
             .withName("value")
             .withParameters()
             .definedInClass("io.github.nchaugen.tabletest.junit.TableTest")
+    ]]></place>
+    </injection>
+    <injection language="TableTest" injector-id="java">
+        <display-name>TableTest.value (org.tabletest.junit)</display-name>
+        <single-file value="false"/>
+        <place><![CDATA[
+        psiMethod()
+            .withName("value")
+            .withParameters()
+            .definedInClass("org.tabletest.junit.TableTest")
     ]]></place>
     </injection>
 </LanguageInjectionConfiguration>

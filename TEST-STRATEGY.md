@@ -71,7 +71,7 @@ Row alignment and indentation are context-dependent because Java text blocks and
 | Hint-based injection (`//language=tabletest`)  | -         | Yes              |
 | XML-based auto-injection                       | -         | Yes              |
 
-**Rationale**: The XML-based injection pattern matches on the annotation class FQN (`io.github.nchaugen.tabletest.junit.TableTest`). Since Kotlin code imports and uses this same Java annotation, auto-injection works in both languages. Tests verify that auto-injection and hint-based injection work correctly.
+**Rationale**: The XML-based injection pattern matches on the annotation class FQNs (`io.github.nchaugen.tabletest.junit.TableTest` and `org.tabletest.junit.TableTest`). Since Kotlin code imports and uses this same Java annotation, auto-injection works in both languages. Tests verify that auto-injection and hint-based injection work correctly.
 
 ## Known Limitations
 

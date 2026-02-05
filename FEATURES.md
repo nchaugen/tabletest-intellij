@@ -66,7 +66,7 @@ The move operation respects blank lines and comments, swapping entire logical ro
 
 ### Language Injection
 
-Automatically injects TableTest language support into `@TableTest` annotation values. The plugin registers an XML-based injection pattern that matches on the annotation class FQN (`io.github.nchaugen.tabletest.junit.TableTest`). Since Kotlin code imports and uses this same Java annotation, auto-injection works in both languages.
+Automatically injects TableTest language support into `@TableTest` annotation values. The plugin registers an XML-based injection pattern that matches on the annotation class FQNs (`io.github.nchaugen.tabletest.junit.TableTest` and `org.tabletest.junit.TableTest`). Since Kotlin code imports and uses this same Java annotation, auto-injection works in both languages.
 
 The `//language=tabletest` hint can also be used and is useful during development if the tabletest library isn't yet on the classpath.
 

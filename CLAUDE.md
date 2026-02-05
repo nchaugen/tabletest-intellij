@@ -38,7 +38,7 @@ IntelliJ Platform plugin providing language support for TableTest – a data-dri
 ### Language Injection
 
 - `META-INF/injections.xml` - Injects TableTest into `@TableTest` annotation values
-- Uses `injector-id="java"` pattern matching on annotation FQN `io.github.nchaugen.tabletest.junit.TableTest`
+- Uses `injector-id="java"` pattern matching on annotation FQNs `io.github.nchaugen.tabletest.junit.TableTest` and `org.tabletest.junit.TableTest`
 - Kotlin code imports and uses this same Java annotation, so auto-injection works in both languages
 - The `//language=tabletest` hint can also be used and is useful during development before the tabletest library is on the classpath
 

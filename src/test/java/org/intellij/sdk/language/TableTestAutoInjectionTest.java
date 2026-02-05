@@ -13,9 +13,10 @@ import java.util.List;
 /**
  * Tests whether language injection works automatically without the //language=tabletest hint.
  *
- * <p>The XML-based injection in injections.xml matches on the annotation class FQN
- * ({@code io.github.nchaugen.tabletest.junit.TableTest}). Since Kotlin code imports and
- * uses this same Java annotation, auto-injection works in both languages.
+ * <p>The XML-based injection in injections.xml matches on the annotation class FQNs
+ * ({@code io.github.nchaugen.tabletest.junit.TableTest} and
+ * {@code org.tabletest.junit.TableTest}). Since Kotlin code imports and uses the same
+ * Java annotation, auto-injection works in both languages.
  *
  * <p>Findings:
  * <ul>
@@ -26,14 +27,14 @@ import java.util.List;
  */
 public class TableTestAutoInjectionTest extends LightJavaCodeInsightFixtureTestCase {
 
-    // === Tests with real TableTest annotation (auto-injection) ===
+    // === Tests with real TableTest annotations (auto-injection) ===
 
     /**
-     * Tests auto-injection in Java with the real TableTest annotation.
+     * Tests auto-injection in Java with the legacy TableTest annotation package.
      * Expected: Injection works because the FQN matches the injection pattern.
      */
     public void testJavaAutoInjection_RealAnnotation_Works() {
-        // Add the TableTest annotation to the fixture's project
+        // Add the legacy TableTest annotation to the fixture's project
         myFixture.addFileToProject(
             "io/github/nchaugen/tabletest/junit/TableTest.java",
             """
@@ -66,11 +67,11 @@ public class TableTestAutoInjectionTest extends LightJavaCodeInsightFixtureTestC
     }
 
     /**
-     * Tests auto-injection in Kotlin with the real TableTest annotation.
+     * Tests auto-injection in Kotlin with the legacy TableTest annotation package.
      * Expected: Injection works because IntelliJ bridges Java injection patterns to Kotlin.
      */
     public void testKotlinAutoInjection_RealAnnotation_Works() {
-        // Add the TableTest annotation to the fixture's project
+        // Add the legacy TableTest annotation to the fixture's project
         myFixture.addFileToProject(
             "io/github/nchaugen/tabletest/junit/TableTest.java",
             """
@@ -100,6 +101,80 @@ public class TableTestAutoInjectionTest extends LightJavaCodeInsightFixtureTestC
             """);
 
         assertInjectionPresent("Kotlin with real annotation (no hint)");
+    }
+
+    /**
+     * Tests auto-injection in Java with the new TableTest annotation package.
+     * Expected: Injection works because the FQN matches the injection pattern.
+     */
+    public void testJavaAutoInjection_NewAnnotation_Works() {
+        // Add the new TableTest annotation to the fixture's project
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String value();
+            }
+            """
+        );
+
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.java", """
+            import org.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest(\"""
+                    header1 | header2
+                    a<caret>       | b
+                    \""")
+                void test() {}
+            }
+            """);
+
+        assertInjectionPresent("Java with new annotation (no hint)");
+    }
+
+    /**
+     * Tests auto-injection in Kotlin with the new TableTest annotation package.
+     * Expected: Injection works because IntelliJ bridges Java injection patterns to Kotlin.
+     */
+    public void testKotlinAutoInjection_NewAnnotation_Works() {
+        // Add the new TableTest annotation to the fixture's project
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String value();
+            }
+            """
+        );
+
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.kt", """
+            import org.tabletest.junit.TableTest
+
+            class Test {
+                @TableTest(\"""
+                    header1 | header2
+                    a<caret>       | b
+                    \""")
+                fun test() {}
+            }
+            """);
+
+        assertInjectionPresent("Kotlin with new annotation (no hint)");
     }
 
     // === Tests with local annotation (no auto-injection) ===
@@ -199,7 +274,7 @@ public class TableTestAutoInjectionTest extends LightJavaCodeInsightFixtureTestC
         assertNotNull(context + ": Expected injection to be present", injections);
         assertFalse(context + ": Expected at least one injection", injections.isEmpty());
 
-        PsiElement injectedElement = injections.get(0).first;
+        PsiElement injectedElement = injections.getFirst().first;
         assertEquals(context + ": Expected TableTest language",
             "TableTest", injectedElement.getLanguage().getID());
     }
