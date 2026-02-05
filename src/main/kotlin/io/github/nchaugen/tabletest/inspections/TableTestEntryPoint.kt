@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement
 import org.jdom.Element
 
 class TableTestEntryPoint : EntryPoint() {
-    override fun getDisplayName(): String = "TableTest @Converter"
+    override fun getDisplayName(): String = "TableTest @TypeConverter"
 
     override fun isEntryPoint(refElement: RefElement, psiElement: PsiElement): Boolean =
         isEntryPoint(psiElement)

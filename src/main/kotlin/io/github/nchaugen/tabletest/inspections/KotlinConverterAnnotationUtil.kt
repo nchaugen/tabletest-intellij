@@ -7,8 +7,8 @@ import org.jetbrains.kotlin.psi.KtAnnotationEntry
 import org.jetbrains.kotlin.psi.KtNamedFunction
 
 internal object KotlinConverterAnnotationUtil {
-    private const val CONVERTER_ANNOTATION = "org.tabletest.junit.Converter"
-    private const val CONVERTER_SHORT_NAME = "Converter"
+    private const val CONVERTER_ANNOTATION = "org.tabletest.junit.TypeConverter"
+    private const val CONVERTER_SHORT_NAME = "TypeConverter"
 
     fun isConverterAnnotatedKotlin(element: PsiElement): Boolean {
         val function = findKotlinFunction(element) ?: return false
