@@ -4,6 +4,7 @@
 
 ### Added
 
+- Support `org.tabletest.junit.TableTest` annotations
 - Treat `@TypeConverter` methods as used in both Java and Kotlin by the unused declaration/symbol inspections
 
 ## [0.2.0] - 2026-01-17
