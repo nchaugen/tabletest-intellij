@@ -7,8 +7,8 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.ParsingTestCase;
 import io.github.nchaugen.tabletest.language.TableTestParserDefinition;
-import io.github.nchaugen.tabletest.parser.TableParser;
-import io.github.nchaugen.tabletest.parser.TableTestParseException;
+import org.tabletest.parser.TableParser;
+import org.tabletest.parser.TableTestParseException;
 
 import java.util.Collection;
 

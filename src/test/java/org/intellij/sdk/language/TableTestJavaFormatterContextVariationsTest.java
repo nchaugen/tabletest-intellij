@@ -14,7 +14,6 @@ package org.intellij.sdk.language;
  * Expected behavior: All lines should align together after formatting.
  * The tested line starts misaligned and should become aligned with the header.
  */
-@SuppressWarnings("JavadocBlankLines")
 public class TableTestJavaFormatterContextVariationsTest extends TableTestFormatterTestCase {
 
     private void formatJava(String tableContent) {

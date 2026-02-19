@@ -31,9 +31,4 @@ public class TableTestParsingTest extends ParsingTestCase {
         return true;
     }
 
-    @Override
-    protected boolean skipSpaces() {
-        return false;
-    }
-
 }
