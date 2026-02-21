@@ -1,6 +1,8 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 
 plugins {
     id("java") // Java support
@@ -111,7 +113,20 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            recommended()
+            select {
+                types = listOf(
+                    IntelliJPlatformType.IntellijIdeaCommunity,
+                    IntelliJPlatformType.IntellijIdeaUltimate,
+                )
+                channels = listOf(ProductRelease.Channel.RELEASE)
+                sinceBuild = "242"
+                untilBuild = "252.*"
+            }
+            select {
+                types = listOf(IntelliJPlatformType.IntellijIdea)
+                channels = listOf(ProductRelease.Channel.RELEASE)
+                sinceBuild = "253"
+            }
         }
     }
 }
@@ -139,7 +154,10 @@ tasks {
     }
 
     test {
-        systemProperty("idea.home.path", "/Users/nch/IdeaProjects/intellij-community/")
+        val ideaHomePath: String? = providers.gradleProperty("ideaHomePath").orNull
+        if (ideaHomePath != null) {
+            systemProperty("idea.home.path", ideaHomePath)
+        }
     }
 
     generateLexer {

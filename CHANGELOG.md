@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded dependencies intellij-platform, grammarkit and kotlin
+
+### Fixed
+
+- Added Kotlin plugin compatibility declaration
+
 ## [0.2.1] - 2026-02-05
 
 ### Added
