@@ -102,6 +102,8 @@ jobs:
     name: Test
     needs: [ build ]
     runs-on: ubuntu-latest
+    env:
+      ORG_GRADLE_JVMARGS: "-Xmx2g -Dfile.encoding=UTF-8"
     steps:
 
       # Free GitHub Actions Environment Disk Space
