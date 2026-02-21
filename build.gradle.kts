@@ -119,7 +119,7 @@ intellijPlatform {
                     IntelliJPlatformType.IntellijIdeaUltimate,
                 )
                 channels = listOf(ProductRelease.Channel.RELEASE)
-                sinceBuild = "242"
+                sinceBuild = "242.21829.142"
                 untilBuild = "252.*"
             }
             select {

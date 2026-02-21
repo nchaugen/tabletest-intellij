@@ -49,6 +49,8 @@
 
         <deadCode
                 implementation="io.github.nchaugen.tabletest.inspections.TableTestEntryPoint"/>
+        <implicitUsageProvider
+                implementation="io.github.nchaugen.tabletest.inspections.TableTestImplicitUsageProvider"/>
 
         <lang.inspectionSuppressor
                 language="JAVA"
@@ -58,5 +60,4 @@
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/TableTestDefault.xml"/>
 
     </extensions>
-
 </idea-plugin>

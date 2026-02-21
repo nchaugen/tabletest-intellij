@@ -1,7 +1,7 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <implicitUsageProvider
-                implementation="io.github.nchaugen.tabletest.inspections.TableTestImplicitUsageProvider"/>
+                implementation="io.github.nchaugen.tabletest.inspections.TableTestKotlinImplicitUsageProvider"/>
     </extensions>
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
         <supportsKotlinPluginMode supportsK1="true" supportsK2="true"/>

@@ -4,11 +4,11 @@ import com.intellij.codeInsight.daemon.ImplicitUsageProvider
 import com.intellij.psi.PsiElement
 
 /**
- * Marks Java @TypeConverter methods as implicitly used.
+ * Marks Kotlin @TypeConverter functions as implicitly used.
  */
-class TableTestImplicitUsageProvider : ImplicitUsageProvider {
+class TableTestKotlinImplicitUsageProvider : ImplicitUsageProvider {
     override fun isImplicitUsage(element: PsiElement): Boolean =
-        ConverterAnnotationUtil.isConverterAnnotatedJava(element)
+        KotlinConverterAnnotationUtil.isConverterAnnotatedKotlin(element)
 
     override fun isImplicitRead(element: PsiElement): Boolean = false
 
