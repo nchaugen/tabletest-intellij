@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Fix Kotlin mode compatibility declaration; keep Java implicit-usage when Kotlin plugin is disabled.
+- Fix Kotlin mode compatibility by aligning minimum build; keep Java implicit-usage when Kotlin plugin is disabled.
 
 ## [0.2.2] - 2026-02-21
 
