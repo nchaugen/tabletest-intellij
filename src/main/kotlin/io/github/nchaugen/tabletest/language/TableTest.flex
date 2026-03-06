@@ -23,7 +23,7 @@ import java.util.Stack;
 CRLF=\R
 WHITESPACE=[ \t]
 
-COMMENT=[^\r\n]*
+COMMENT=[^\r\n]+
 DATA_CHAR=[^ \t\r\n]
 UNQUOTED_CHAR=[^|\[\{\"\' \t\r\n]
 UNQUOTED_STRING=[^|\[\{\"\' \t\r\n]([^|\r\n]*[^| \t\r\n])?

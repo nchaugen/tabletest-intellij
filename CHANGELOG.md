@@ -5,6 +5,7 @@
 ### Fixed
 
 - Fix Kotlin mode compatibility by aligning minimum build; keep Java implicit-usage when Kotlin plugin is disabled.
+- Prevent zero-length `COMMENT` token matches in the lexer (avoids potential non-termination warnings).
 
 ## [0.2.2] - 2026-02-21
 
