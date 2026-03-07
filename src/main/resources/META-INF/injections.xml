@@ -1,7 +1,8 @@
 <LanguageInjectionConfiguration>
     <injection language="TableTest" injector-id="java">
         <display-name>TableTest.value (io.github.nchaugen.tabletest.junit)</display-name>
-        <single-file value="false"/>
+        <single-file value="true"/>
+        <value-pattern><![CDATA[(?s).*\n.*]]></value-pattern>
         <place><![CDATA[
         psiMethod()
             .withName("value")
@@ -11,7 +12,8 @@
     </injection>
     <injection language="TableTest" injector-id="java">
         <display-name>TableTest.value (org.tabletest.junit)</display-name>
-        <single-file value="false"/>
+        <single-file value="true"/>
+        <value-pattern><![CDATA[(?s).*\n.*]]></value-pattern>
         <place><![CDATA[
         psiMethod()
             .withName("value")

@@ -4,10 +4,13 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -138,6 +141,237 @@ public class TableTestAutoInjectionTest extends LightJavaCodeInsightFixtureTestC
             """);
 
         assertInjectionPresent("Java with new annotation (no hint)");
+    }
+
+    /**
+     * Tests auto-injection in Java with a single-line string annotation value.
+     * Expected: Injection works for Java versions without text blocks.
+     */
+    public void testJavaAutoInjection_RealAnnotation_SingleString_Works() {
+        myFixture.addFileToProject(
+            "io/github/nchaugen/tabletest/junit/TableTest.java",
+            """
+            package io.github.nchaugen.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String value();
+            }
+            """
+        );
+
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.java", """
+            import io.github.nchaugen.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest("header1 | heade<caret>r2")
+                void test() {}
+            }
+            """);
+
+        assertInjectionPresent("Java single string with real annotation (no hint)");
+    }
+
+    /**
+     * Tests auto-injection in Java for array-based value declarations with the legacy annotation package.
+     * Expected: Injection works across array entries.
+     */
+    public void testJavaAutoInjection_RealAnnotation_Array_Works() {
+        myFixture.addFileToProject(
+            "io/github/nchaugen/tabletest/junit/TableTest.java",
+            """
+            package io.github.nchaugen.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.java", """
+            import io.github.nchaugen.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest({
+                    "header1 | header2",
+                    "a<caret>       | b"
+                })
+                void test() {}
+            }
+            """);
+
+        assertSingleInjectionPresent("Java array with real annotation (no hint)");
+    }
+
+    /**
+     * Tests auto-injection in Java for array-based value declarations with the new annotation package.
+     * Expected: Injection works across array entries.
+     */
+    public void testJavaAutoInjection_NewAnnotation_Array_Works() {
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.java", """
+            import org.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest({
+                    "header1 | header2",
+                    "a<caret>       | b"
+                })
+                void test() {}
+            }
+            """);
+
+        assertSingleInjectionPresent("Java array with new annotation (no hint)");
+    }
+
+    public void testJavaAutoInjection_ArrayContainsNewlinesBetweenElements() {
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.java", """
+            import org.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest({
+                    "header1 | header2",
+                    "a<caret> | b",
+                    "c | d"
+                })
+                void test() {}
+            }
+            """);
+
+        List<Pair<PsiElement, TextRange>> injections = findInjections();
+        assertNotNull("Expected injection to be present", injections);
+        assertEquals("Expected exactly one injection", 1, injections.size());
+
+        String injectedText = injections.getFirst().first.getText();
+        assertTrue("Expected newline between first and second array elements", injectedText.contains("header1 | header2\na | b"));
+        assertTrue("Expected newline between second and third array elements", injectedText.contains("a | b\nc | d"));
+    }
+
+    public void testJavaAutoInjection_TextBlockContainsHeaderRowNewline() {
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String value();
+            }
+            """
+        );
+
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("ModernLeapYearExampleTest.java", """
+            import org.tabletest.junit.TableTest;
+
+            public class ModernLeapYearExampleTest {
+                @TableTest(\"""
+                    Scenario                              | Example years      | Is leap year?
+                    years not divisible by 4              | {2001, 2002, 2003} | fal<caret>se
+                    years divisible by 4                  | {2004, 2008, 2012} | true
+                    \""")
+                void shouldDetermineLeapYear() {}
+            }
+            """);
+
+        List<Pair<PsiElement, TextRange>> injections = findInjections();
+        assertNotNull("Expected injection to be present", injections);
+        StringBuilder failures = new StringBuilder();
+        for (int i = 0; i < injections.size(); i++) {
+            PsiElement injectedFragment = injections.get(i).first;
+            String text = injectedFragment.getText().replace("\n", "\\n");
+            Collection<PsiErrorElement> errors = PsiTreeUtil.collectElementsOfType(injectedFragment, PsiErrorElement.class);
+            if (!errors.isEmpty()) {
+                failures.append(i)
+                    .append(":<")
+                    .append(text)
+                    .append("> error=")
+                    .append(errors.iterator().next().getErrorDescription())
+                    .append('\n');
+            }
+        }
+        assertTrue("Injected fragments with parse errors:\n" + failures, failures.isEmpty());
+    }
+
+    /**
+     * Tests safe-failure behaviour for mixed array values with unsupported expressions.
+     * Expected: No TableTest injection is created.
+     */
+    public void testJavaAutoInjection_ArrayWithUnsupportedEntry_NoInjection() {
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.java", """
+            import org.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest({
+                    "header1 | heade<caret>r2",
+                    "a | b" + suffix
+                })
+                void test() {}
+
+                String suffix = "x";
+            }
+            """);
+
+        assertNoInjection("Java array with unsupported entry (no hint)");
     }
 
     /**
@@ -283,6 +517,17 @@ public class TableTestAutoInjectionTest extends LightJavaCodeInsightFixtureTestC
         List<Pair<PsiElement, TextRange>> injections = findInjections();
         assertTrue(context + ": Expected no injection, but found one",
             injections == null || injections.isEmpty());
+    }
+
+    private void assertSingleInjectionPresent(String context) {
+        List<Pair<PsiElement, TextRange>> injections = findInjections();
+        assertNotNull(context + ": Expected injection to be present", injections);
+        assertEquals(context + ": Expected exactly one injection", 1, injections.size());
+        assertEquals(
+            context + ": Expected TableTest language",
+            "TableTest",
+            injections.getFirst().first.getLanguage().getID()
+        );
     }
 
     private List<Pair<PsiElement, TextRange>> findInjections() {

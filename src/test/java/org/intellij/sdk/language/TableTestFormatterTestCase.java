@@ -1,6 +1,8 @@
 package org.intellij.sdk.language;
 
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.lang.injection.InjectedLanguageManager;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
@@ -21,6 +23,12 @@ public abstract class TableTestFormatterTestCase extends LightJavaCodeInsightFix
     protected void formatFile(String filePath) {
         myFixture.configureByFile(filePath);
         reformatTable();
+    }
+
+    protected void checkResultInTopLevelFile(String expected) {
+        PsiFile currentFile = myFixture.getFile();
+        PsiFile topLevelFile = InjectedLanguageManager.getInstance(getProject()).getTopLevelFile(currentFile);
+        assertEquals(expected, topLevelFile.getText());
     }
 
     private void reformatTable() {

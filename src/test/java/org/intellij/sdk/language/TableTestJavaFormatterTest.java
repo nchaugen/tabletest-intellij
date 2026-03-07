@@ -209,4 +209,90 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
             """);
     }
 
+    public void testJavaFormatterArrayLiteralAlignsAcrossElements() {
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        format(
+            "Test.java", """
+                import org.tabletest.junit.TableTest;
+
+                public class Test {
+                    @TableTest({
+                        "a|bb",
+                        "longer|c<caret>"
+                    })
+                    void test() {}
+                }
+                """
+        );
+        checkResultInTopLevelFile("""
+            import org.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest({
+                    "a      | bb",
+                    "longer | c"
+                })
+                void test() {}
+            }
+            """);
+    }
+
+    public void testJavaFormatterArrayLiteralPreservesBlankRowElement() {
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        format(
+            "Test.java", """
+                import org.tabletest.junit.TableTest;
+
+                public class Test {
+                    @TableTest({
+                        "aa|b",
+                        "",
+                        "c|dddd<caret>"
+                    })
+                    void test() {}
+                }
+                """
+        );
+        checkResultInTopLevelFile("""
+            import org.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest({
+                    "aa | b",
+                    "",
+                    "c  | dddd"
+                })
+                void test() {}
+            }
+            """);
+    }
+
 }

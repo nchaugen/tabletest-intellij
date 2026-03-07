@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Support Java `@TableTest` static string-array values for TableTest injection and table formatting.
+
 ### Fixed
 
 - Fix Kotlin mode compatibility by aligning minimum build; keep Java implicit-usage when Kotlin plugin is disabled.

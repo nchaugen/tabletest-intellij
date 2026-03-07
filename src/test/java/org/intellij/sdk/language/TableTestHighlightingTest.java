@@ -116,6 +116,237 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
         myFixture.checkHighlighting(false, false, false, true);
     }
 
+    public void testJavaTextBlockHighlightingWithUnicodeAndCollections() {
+        myFixture.configureByText(
+            "Test.java", """
+                @interface TableTest {
+                    String value();
+                }
+
+                public class Test {
+                    //language=tabletest
+                    @TableTest(\"""
+                        Collection literal | Map literal                        | Set literal?
+                        []                 | [:]                                | {}
+                        [[]]               | [a: []]                            | {[]}
+                        [[:]]              | [a: [:]]                           | {[:]}
+                        [{}]               | [a: {}]                            | {{}}
+                        [1, 2, 3]          | [one: 1, two: 2, three: 3]         | {1, 2, 3}
+                        ['1', "2", 3]     | [one: '1', two: "2", three: 3]     | {'1', "2", 3}
+                        [[], [], []]       | [a: [], b: [], c: []]              | {[], [], []}
+                        abc                | a,b,c                              | > [ a , b , c ] <
+                                           |                                    |
+                        1                  | 2                                  | 3
+                        '1'                | "2"                                | 3
+                        ''                 | ""                                 |
+
+                        //
+                        // comment
+
+                        xx                 | yy                                 | zz
+                        æææ                | øøø                                | ååå
+                        [1, 2, 3]          | [one: 1, two: 2, three: 3]         | {1, 2, 3}
+                        !@#$%^&*()_+-=     | "|,[]{}:"                          | 12:34:56.789
+                        你好世界           | こんにちは世界                     | 안녕하세요
+                        مرحبا بالعالم      | Привет мир                         | Γεια σου κόσμε
+                        שלום עולם          | สวัสดีโลก                            | नमस्ते संसार
+                        😀                 | Hello 👋 World                     | Café ☕ tastes good 😋
+                        🌍🌎🌏             | 👨‍💻                                 | 🇺🇸
+                        naïve résumé       | α β γ δ ε                          | ∑ ∏ ∫ √
+                        ┌─┐│ │└─┘          | $€£¥₹                              | «»""''—–
+                        //   the end
+                        \""")
+                    void test(String collectionLiteral, String mapLiteral) {}
+                }
+                """
+        );
+
+        myFixture.checkHighlighting(false, false, false, true);
+    }
+
+    public void testJavaArrayAutoInjectionHighlightingRowsStartingWithBraces() {
+        myFixture.addFileToProject(
+            "io/github/nchaugen/tabletest/junit/TableTest.java",
+            """
+            package io.github.nchaugen.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        myFixture.configureByText(
+            "Test.java", """
+                import io.github.nchaugen.tabletest.junit.TableTest;
+
+                public class Test {
+                    @TableTest({
+                        "Collection literal | Map literal | Set literal?",
+                        "{}                 | [:]         | {}",
+                        "[]                 | [:]         | {}",
+                        "[[]]               | [a: []]     | {[]}",
+                        "[{}]               | [a: {}]     | {{}}"
+                    })
+                    void test(String collectionLiteral, String mapLiteral, String setLiteral) {}
+                }
+                """
+        );
+
+        myFixture.checkHighlighting(false, false, false, true);
+    }
+
+    public void testJavaAutoInjectionHighlightingWithUnicodeAndCollections() {
+        myFixture.addFileToProject(
+            "io/github/nchaugen/tabletest/junit/TableTest.java",
+            """
+            package io.github.nchaugen.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String value();
+            }
+            """
+        );
+
+        myFixture.configureByText(
+            "TableCollectionsAndUnicodeProbe.java", """
+                import io.github.nchaugen.tabletest.junit.TableTest;
+
+                public class TableCollectionsAndUnicodeProbe {
+                    @TableTest(\"""
+                        Collection literal | Map literal                        | Set literal?
+                        []                 | [:]                                | {}
+                        [[]]               | [a: []]                            | {[]}
+                        [[:]]              | [a: [:]]                           | {[:]}
+                        [{}]               | [a: {}]                            | {{}}
+                        [1, 2, 3]          | [one: 1, two: 2, three: 3]         | {1, 2, 3}
+                        ['1', "2", 3]     | [one: '1', two: "2", three: 3]     | {'1', "2", 3}
+                        [[], [], []]       | [a: [], b: [], c: []]              | {[], [], []}
+                        abc                | a,b,c                              | > [ a , b , c ] <
+                                           |                                    |
+                        1                  | 2                                  | 3
+                        '1'                | "2"                                | 3
+                        ''                 | ""                                 |
+
+                        //
+                        // comment
+
+                        xx                 | yy                                 | zz
+                        æææ                | øøø                                | ååå
+                        [1, 2, 3]          | [one: 1, two: 2, three: 3]         | {1, 2, 3}
+                        !@#$%^&*()_+-=     | "|,[]{}:"                          | 12:34:56.789
+                        你好世界           | こんにちは世界                     | 안녕하세요
+                        مرحبا بالعالم      | Привет мир                         | Γεια σου κόσμε
+                        שלום עולם          | สวัสดีโลก                            | नमस्ते संसार
+                        😀                 | Hello 👋 World                     | Café ☕ tastes good 😋
+                        🌍🌎🌏             | 👨‍💻                                 | 🇺🇸
+                        naïve résumé       | α β γ δ ε                          | ∑ ∏ ∫ √
+                        ┌─┐│ │└─┘          | $€£¥₹                              | «»""''—–
+                        //   the end
+                        \""")
+                    void test(String collectionLiteral, String mapLiteral) {}
+                }
+                """
+        );
+
+        myFixture.checkHighlighting(false, false, false, true);
+    }
+
+    public void testJavaAutoInjectionHighlightingLeapYearTableWithSetValues() {
+        myFixture.addFileToProject(
+            "io/github/nchaugen/tabletest/junit/TableTest.java",
+            """
+            package io.github.nchaugen.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String value();
+            }
+            """
+        );
+
+        myFixture.configureByText(
+            "LegacyLeapYearExampleTest.java", """
+                import io.github.nchaugen.tabletest.junit.TableTest;
+
+                import java.time.Year;
+
+                import static org.junit.jupiter.api.Assertions.assertEquals;
+
+                public class LegacyLeapYearExampleTest {
+                    @TableTest(\"""
+                        Scenario                           | Example years       | Is leap year?
+                        years not divisible by 4           | {2001, 2002, 2003} | false
+                        years divisible by 4               | {2004, 2008, 2012} | true
+                        years divisible by 100 but not 400 | {2100, 2200, 2300} | false
+                        years divisible by 400             | {2000, 2400, 2800} | true
+                        \""")
+                    void shouldDetermineLeapYear(Year year, boolean expectedResult) {
+                        assertEquals(expectedResult, year.isLeap(), "Year " + year);
+                    }
+                }
+                """
+        );
+
+        myFixture.checkHighlighting(false, false, false, true);
+    }
+
+    public void testJavaAutoInjectionHighlightingTextBlockWhenAnnotationValueIsStringArray() {
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        myFixture.configureByText(
+            "ModernLeapYearExampleTest.java", """
+                package io.github.nchaugen.examples.modern;
+
+                import org.tabletest.junit.TableTest;
+
+                import java.time.Year;
+
+                import static org.junit.jupiter.api.Assertions.assertEquals;
+
+                public class ModernLeapYearExampleTest {
+
+                    @TableTest(\"""
+                        Scenario                              | Example years      | Is leap year?
+                        years not divisible by 4              | {2001, 2002, 2003} | false
+                        years divisible by 4                  | {2004, 2008, 2012} | true
+                        years divisible by 100 but not by 400 | {2100, 2200, 2300} | false
+                        years divisible by 400                | {2000, 2400, 2800} | true
+                        \""")
+                    void shouldDetermineLeapYear(Year year, boolean expectedResult) {
+                        assertEquals(expectedResult, year.isLeap(), "Year " + year);
+                    }
+                }
+                """
+        );
+
+        myFixture.checkHighlighting(false, false, false, true);
+    }
+
     @Override
     protected String getTestDataPath() {
         return "src/test/testData";

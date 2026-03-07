@@ -9,7 +9,7 @@ The plugin provides TableTest language support in three contexts:
 | Context | Description |
 |---------|-------------|
 | **Native files** | Standalone `.table` files |
-| **Java injection** | TableTest content inside `@TableTest` annotation text blocks |
+| **Java injection** | TableTest content inside `@TableTest` annotation values (`"""..."""`, `"..."`, or `{"...", "..."}`) |
 | **Kotlin injection** | TableTest content inside `@TableTest` annotation raw strings |
 
 All features work identically across these contexts unless otherwise noted.
@@ -66,7 +66,7 @@ The move operation respects blank lines and comments, swapping entire logical ro
 
 ### Language Injection
 
-Automatically injects TableTest language support into `@TableTest` annotation values. The plugin registers an XML-based injection pattern that matches on the annotation class FQNs (`io.github.nchaugen.tabletest.junit.TableTest` and `org.tabletest.junit.TableTest`). Since Kotlin code imports and uses this same Java annotation, auto-injection works in both languages.
+Automatically injects TableTest language support into `@TableTest` annotation values. The plugin registers an XML-based injection pattern that matches on the annotation class FQNs (`io.github.nchaugen.tabletest.junit.TableTest` and `org.tabletest.junit.TableTest`), and a Java array injector for static `String[]` annotation values. Since Kotlin code imports and uses this same Java annotation, auto-injection works in both languages.
 
 The `//language=tabletest` hint can also be used and is useful during development if the tabletest library isn't yet on the classpath.
 
