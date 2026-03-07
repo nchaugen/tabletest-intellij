@@ -7,10 +7,10 @@ import junit.framework.TestCase;
 
 public class TableTestSyntaxHighlighterTest extends TestCase {
 
-    public void testExpectedHeaderUsesFunctionDeclarationAsFallback() {
+    public void testExpectedHeaderUsesStaticMethodAsFallback() {
         TextAttributesKey fallback =
             TableTestSyntaxHighlighter.Companion.getOUTPUT_HEADER_KEY().getFallbackAttributeKey();
 
-        assertSame(DefaultLanguageHighlighterColors.FUNCTION_DECLARATION, fallback);
+        assertSame(DefaultLanguageHighlighterColors.STATIC_METHOD, fallback);
     }
 }

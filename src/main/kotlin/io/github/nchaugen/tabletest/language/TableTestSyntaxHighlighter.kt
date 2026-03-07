@@ -48,7 +48,7 @@ class TableTestSyntaxHighlighter : SyntaxHighlighterBase() {
         val INPUT_HEADER_KEY: TextAttributesKey =
             createTextAttributesKey("TABLE_TEST_INPUT_HEADER", DefaultLanguageHighlighterColors.STATIC_FIELD)
         val OUTPUT_HEADER_KEY: TextAttributesKey =
-            createTextAttributesKey("TABLE_TEST_OUTPUT_HEADER", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
+            createTextAttributesKey("TABLE_TEST_OUTPUT_HEADER", DefaultLanguageHighlighterColors.STATIC_METHOD)
         val MAP_KEY_KEY: TextAttributesKey =
             createTextAttributesKey("TABLE_TEST_MAP_KEY", DefaultLanguageHighlighterColors.STRING)
         val COLUMN_SEPARATOR_KEY: TextAttributesKey =
