@@ -5,6 +5,11 @@
 ### Added
 
 - Support Java `@TableTest` static string-array values for TableTest injection and table formatting.
+- Align closing quotes in Java `@TableTest` string arrays by normalising row lengths after formatting.
+
+### Changed
+
+- Expected header default fallback style is now `Classes -> Static method`.
 
 ### Fixed
 
