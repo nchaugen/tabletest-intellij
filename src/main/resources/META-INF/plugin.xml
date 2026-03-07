@@ -39,6 +39,9 @@
         <formatting.injectedOptions
                 implementation="io.github.nchaugen.tabletest.language.TableTestInjectedFormattingOptionsProvider"/>
 
+        <postFormatProcessor
+                implementation="io.github.nchaugen.tabletest.language.TableTestTrailingWhitespacePostFormatProcessor"/>
+
         <multiHostInjector
                 order="first"
                 implementation="io.github.nchaugen.tabletest.language.TableTestJavaArrayValueInjector"/>

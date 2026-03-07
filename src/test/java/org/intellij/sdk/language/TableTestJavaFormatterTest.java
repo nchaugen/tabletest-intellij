@@ -295,4 +295,52 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
             """);
     }
 
+    public void testJavaFormatterArrayLiteralTrimsTrailingPaddingOnEveryRow() {
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            """
+            package org.tabletest.junit;
+
+            import java.lang.annotation.*;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.METHOD)
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+
+        format(
+            "Test.java", """
+                import org.tabletest.junit.TableTest;
+
+                public class Test {
+                    @TableTest({
+                        "Scenario              | Purchases in last 30 days | Discount?",
+                        "No discount           | 0                         | 0%       <caret>",
+                        "Tier 1 discount       | 4                         | 5%       ",
+                        "Tier 2 discount       | 9                         | 10%      ",
+                        "Maximum tier discount | 40                        | 40%      "
+                    })
+                    void test() {}
+                }
+                """
+        );
+        checkResultInTopLevelFile("""
+            import org.tabletest.junit.TableTest;
+
+            public class Test {
+                @TableTest({
+                    "Scenario              | Purchases in last 30 days | Discount?",
+                    "No discount           | 0                         | 0%",
+                    "Tier 1 discount       | 4                         | 5%",
+                    "Tier 2 discount       | 9                         | 10%",
+                    "Maximum tier discount | 40                        | 40%"
+                })
+                void test() {}
+            }
+            """);
+    }
+
 }
