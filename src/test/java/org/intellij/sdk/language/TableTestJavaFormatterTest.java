@@ -244,7 +244,7 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
             public class Test {
                 @TableTest({
                     "a      | bb",
-                    "longer | c"
+                    "longer | c\s"
                 })
                 void test() {}
             }
@@ -286,7 +286,7 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
 
             public class Test {
                 @TableTest({
-                    "aa | b",
+                    "aa | b\s\s\s",
                     "",
                     "c  | dddd"
                 })
@@ -295,7 +295,7 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
             """);
     }
 
-    public void testJavaFormatterArrayLiteralTrimsTrailingPaddingOnEveryRow() {
+    public void testJavaFormatterArrayLiteralAlignsClosingQuotesAcrossRows() {
         myFixture.addFileToProject(
             "org/tabletest/junit/TableTest.java",
             """
@@ -318,10 +318,10 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
                 public class Test {
                     @TableTest({
                         "Scenario              | Purchases in last 30 days | Discount?",
-                        "No discount           | 0                         | 0%       <caret>",
-                        "Tier 1 discount       | 4                         | 5%       ",
-                        "Tier 2 discount       | 9                         | 10%      ",
-                        "Maximum tier discount | 40                        | 40%      "
+                        "No discount           | 0                         | 0%<caret>",
+                        "Tier 1 discount       | 4                         | 5%",
+                        "Tier 2 discount       | 9                         | 10%",
+                        "Maximum tier discount | 40                        | 40%"
                     })
                     void test() {}
                 }
@@ -333,10 +333,10 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
             public class Test {
                 @TableTest({
                     "Scenario              | Purchases in last 30 days | Discount?",
-                    "No discount           | 0                         | 0%",
-                    "Tier 1 discount       | 4                         | 5%",
-                    "Tier 2 discount       | 9                         | 10%",
-                    "Maximum tier discount | 40                        | 40%"
+                    "No discount           | 0                         | 0%\s\s\s\s\s\s\s",
+                    "Tier 1 discount       | 4                         | 5%\s\s\s\s\s\s\s",
+                    "Tier 2 discount       | 9                         | 10%\s\s\s\s\s\s",
+                    "Maximum tier discount | 40                        | 40%\s\s\s\s\s\s"
                 })
                 void test() {}
             }
