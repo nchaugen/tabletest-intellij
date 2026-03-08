@@ -69,14 +69,14 @@ class TableTestRowMover : StatementUpDownMover() {
         toHostOffset: (PsiElement) -> Int
     ): Boolean {
         val row = PsiTreeUtil.getParentOfType(element, TableTestRow::class.java, false)
-        val headerRow = PsiTreeUtil.getParentOfType(element, TableTestHeaderRow::class.java, false)
-
-        if (headerRow != null) {
-            info.toMove2 = null
-            return true
+        if (row == null) {
+            val headerRow = PsiTreeUtil.getParentOfType(element, TableTestHeaderRow::class.java, false)
+            if (headerRow != null) {
+                info.toMove2 = null
+                return true
+            }
+            return false
         }
-
-        if (row == null) return false
 
         val adjacentRow = findAdjacentDataRow(row, down)
         if (adjacentRow == null) {
@@ -92,10 +92,14 @@ class TableTestRowMover : StatementUpDownMover() {
         return true
     }
 
-    private fun findAdjacentDataRow(row: TableTestRow, down: Boolean): TableTestRow? =
-        generateSequence(if (down) row.nextSibling else row.prevSibling) {
-            if (down) it.nextSibling else it.prevSibling
-        }.filterIsInstance<TableTestRow>().firstOrNull()
+    private fun findAdjacentDataRow(row: TableTestRow, down: Boolean): TableTestRow? {
+        var sibling: PsiElement? = if (down) row.nextSibling else row.prevSibling
+        while (sibling != null) {
+            if (sibling is TableTestRow) return sibling
+            sibling = if (down) sibling.nextSibling else sibling.prevSibling
+        }
+        return null
+    }
 
     private fun lineRangeOf(
         element: PsiElement,

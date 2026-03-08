@@ -6,6 +6,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.ElementManipulators
 import com.intellij.psi.PsiAnnotation
 import com.intellij.psi.PsiArrayInitializerMemberValue
+import com.intellij.psi.PsiAnnotationMemberValue
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -111,9 +112,8 @@ class TableTestTrailingWhitespacePostFormatProcessor : PostFormatProcessor {
         if (!isSupportedTableTestArray(arrayValue)) return null
 
         val literals: List<PsiLiteralExpression> = arrayValue.initializers
-            .mapNotNull { initializer -> initializer as? PsiLiteralExpression }
+            .mapNotNull(::asStringLiteral)
         if (literals.size != arrayValue.initializers.size) return null
-        if (literals.any { literal -> literal.value !is String }) return null
         return literals
     }
 
@@ -134,9 +134,19 @@ class TableTestTrailingWhitespacePostFormatProcessor : PostFormatProcessor {
         return rows
             .mapNotNull { row ->
                 val trimmed: String = trimTrailingHorizontalWhitespace(row.rawText)
+                val hasTrailingWhitespace: Boolean = row.rawText.length != trimmed.length
+                val needsPadding: Boolean = trimmed.isNotEmpty() && trimmed.length < maxRowLength
+                if (!hasTrailingWhitespace && !needsPadding) {
+                    return@mapNotNull null
+                }
                 val aligned: String = alignedRowText(trimmed, maxRowLength)
-                if (aligned == row.rawText) null else TextReplacement(row.range, aligned)
+                TextReplacement(row.range, aligned)
             }
+    }
+
+    private fun asStringLiteral(initializer: PsiAnnotationMemberValue): PsiLiteralExpression? {
+        val literal: PsiLiteralExpression = initializer as? PsiLiteralExpression ?: return null
+        return if (literal.value is String) literal else null
     }
 
     private fun rowValue(literal: PsiLiteralExpression, sourceText: CharSequence): RowValue? {

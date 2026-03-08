@@ -154,8 +154,7 @@ tasks {
     }
 
     test {
-        val ideaHomePath: String? = providers.gradleProperty("ideaHomePath").orNull
-        if (ideaHomePath != null) {
+        providers.gradleProperty("ideaHomePath").orNull?.let { ideaHomePath ->
             systemProperty("idea.home.path", ideaHomePath)
         }
     }
