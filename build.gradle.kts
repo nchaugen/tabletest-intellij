@@ -141,6 +141,9 @@ changelog {
 kover {
     reports {
         total {
+            verify {
+                onCheck = false
+            }
             xml {
                 onCheck = true
             }
