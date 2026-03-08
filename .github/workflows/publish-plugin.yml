@@ -90,14 +90,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ github.event.release.tag_name }}"
-          BRANCH="changelog-update-$VERSION"
+          BRANCH="changelog-update-$VERSION-${{ github.run_id }}"
           LABEL="release changelog"
+          UPDATED_CHANGELOG="$(mktemp)"
 
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
 
-          git checkout -b $BRANCH
-          git commit -am "Changelog update - $VERSION"
+          # `patchChangelog` runs on the release tag checkout. Create the PR branch from
+          # origin/main and copy over only CHANGELOG.md to avoid unrelated workflow diffs.
+          cp CHANGELOG.md "$UPDATED_CHANGELOG"
+          git fetch origin main
+          git checkout -b "$BRANCH" origin/main
+          cp "$UPDATED_CHANGELOG" CHANGELOG.md
+          git add CHANGELOG.md
+          if git diff --cached --quiet; then
+            echo "No changelog changes to commit; skipping PR creation."
+            exit 0
+          fi
+          git commit -m "Changelog update - $VERSION"
           git push --set-upstream origin $BRANCH
 
           gh label create "$LABEL" \
