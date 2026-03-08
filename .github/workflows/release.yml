@@ -1,117 +1,122 @@
-# GitHub Actions Workflow created for handling the release process based on the draft release prepared with the Build workflow.
-# Running the publishPlugin task requires PUBLISH_TOKEN secret.
-# Plugin signing is optional - provide PRIVATE_KEY, PRIVATE_KEY_PASSWORD, CERTIFICATE_CHAIN secrets to enable.
-# See https://plugins.jetbrains.com/docs/intellij/plugin-signing.html for more information.
+name: Release New Version
 
-name: Release
 on:
-  release:
-    types: [prereleased, released]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "SemVer (e.g. 0.2.3 or 0.2.3-rc.1). Leave empty to use gradle.properties."
+        required: false
+        type: string
+
+concurrency:
+  group: release-new-version
+  cancel-in-progress: false
 
 jobs:
-
-  # Prepare and publish the plugin to JetBrains Marketplace repository
-  release:
-    name: Publish Plugin
+  createTag:
+    name: Create release tag
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
     steps:
-
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
-
-      # Check out the current repository
       - name: Fetch Sources
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: main
           fetch-depth: 0
 
-      # Set up Java environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
           distribution: zulu
           java-version: 21
 
-      # Setup Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
           cache-read-only: true
 
-      # Set environment variables
-      - name: Export Properties
-        id: properties
+      - name: Resolve version
+        id: version
         shell: bash
         run: |
-          CHANGELOG="$(cat << 'EOM' | sed -e 's/^[[:space:]]*$//g' -e '/./,$!d'
-          ${{ github.event.release.body }}
-          EOM
-          )"
+          set -euo pipefail
 
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          current_version="$(grep "^pluginVersion" gradle.properties | sed 's/.*= *//')"
+          input_version="${{ github.event.inputs.version }}"
 
-      # Update the Unreleased section with the current release note
-      - name: Patch Changelog
-        if: ${{ steps.properties.outputs.changelog != '' }}
-        env:
-          CHANGELOG: ${{ steps.properties.outputs.changelog }}
+          if [ -z "$input_version" ]; then
+            version="$current_version"
+            echo "Using version from gradle.properties: $version"
+          else
+            version="$input_version"
+          fi
+
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Error: version '$version' is not valid SemVer"
+            exit 1
+          fi
+
+          echo "current_version=$current_version" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+
+      - name: Validate sync and tag availability
+        shell: bash
         run: |
-          ./gradlew patchChangelog --release-note="$CHANGELOG"
+          set -euo pipefail
 
-      # Publish the plugin to JetBrains Marketplace
-      - name: Publish Plugin
-        env:
-          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
-        run: ./gradlew publishPlugin
+          git fetch origin main --tags
 
-      # Upload artifact as a release asset
-      - name: Upload Release Asset
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.event.release.tag_name }} ./build/distributions/*
+          local_head="$(git rev-parse HEAD)"
+          remote_head="$(git rev-parse origin/main)"
+          if [ "$local_head" != "$remote_head" ]; then
+            echo "Error: checked out main is not in sync with origin/main"
+            exit 1
+          fi
 
-      # Create a pull request
-      - name: Create Pull Request
-        if: ${{ steps.properties.outputs.changelog != '' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag="${{ steps.version.outputs.tag }}"
+          if git rev-parse "$tag" >/dev/null 2>&1; then
+            echo "Error: tag $tag already exists locally"
+            exit 1
+          fi
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1 || \
+             git ls-remote --exit-code --tags origin "refs/tags/$tag^{}" >/dev/null 2>&1; then
+            echo "Error: tag $tag already exists on origin"
+            exit 1
+          fi
+
+      - name: Update gradle.properties
+        if: steps.version.outputs.version != steps.version.outputs.current_version
+        shell: bash
         run: |
-          VERSION="${{ github.event.release.tag_name }}"
-          BRANCH="changelog-update-$VERSION"
-          LABEL="release changelog"
+          set -euo pipefail
+          sed -i "s/^pluginVersion *=.*/pluginVersion = ${{ steps.version.outputs.version }}/" gradle.properties
 
+      - name: Run checks
+        run: ./gradlew check
+
+      - name: Commit version bump
+        if: steps.version.outputs.version != steps.version.outputs.current_version
+        shell: bash
+        run: |
+          set -euo pipefail
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
+          git add gradle.properties
+          git commit -m "chore: bump version to ${{ steps.version.outputs.version }}"
+          git push origin main
 
-          git checkout -b $BRANCH
-          git commit -am "Changelog update - $VERSION"
-          git push --set-upstream origin $BRANCH
+      - name: Create and push tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${{ steps.version.outputs.tag }}"
+          git tag -a "$tag" -m "Release $tag"
+          git push origin "$tag"
 
-          gh label create "$LABEL" \
-            --description "Pull requests with release changelog update" \
-            --force \
-            || true
-
-          gh pr create \
-            --title "Changelog update - \`$VERSION\`" \
-            --body "Current pull request contains patched \`CHANGELOG.md\` file for the \`$VERSION\` version." \
-            --label "$LABEL" \
-            --head $BRANCH
-
-          gh pr merge $BRANCH \
-            --rebase \
-            --auto \
-            --delete-branch
+      - name: Summary
+        run: |
+          echo "Created and pushed tag: ${{ steps.version.outputs.tag }}"
+          echo "Build workflow will now prepare a release draft."
