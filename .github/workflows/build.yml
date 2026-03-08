@@ -20,6 +20,13 @@ on:
     tags: [ 'v*' ]
   # Trigger the workflow on any pull request
   pull_request:
+  # Allow manual dispatch (used by release workflow after creating a tag)
+  workflow_dispatch:
+    inputs:
+      releaseTag:
+        description: "Tag to create draft release for (e.g. v0.2.3)"
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -252,7 +259,7 @@ jobs:
   # If accepted and published, release workflow would be triggered
   releaseDraft:
     name: Release draft
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) || (github.event_name == 'workflow_dispatch' && startsWith(github.event.inputs.releaseTag, 'v'))
     needs: [ build, test, inspectCode, verify ]
     runs-on: ubuntu-latest
     permissions:
@@ -276,10 +283,11 @@ jobs:
       - name: Create Release Draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.releaseTag || format('v{0}', needs.build.outputs.version) }}
         run: |
-          gh release create "v${{ needs.build.outputs.version }}" \
+          gh release create "$RELEASE_TAG" \
             --draft \
-            --title "v${{ needs.build.outputs.version }}" \
+            --title "$RELEASE_TAG" \
             --notes "$(cat << 'EOM'
           ${{ needs.build.outputs.changelog }}
           EOM
