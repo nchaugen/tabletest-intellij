@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-03-08
+
 ### Added
 
 - Support Java `@TableTest` static string-array values for TableTest injection and table formatting.
@@ -135,7 +137,8 @@
 - Syntax highlighting in TableTest tables
 - Auto-injection of TableTest language for Java `@TableTest` annotations
 
-[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/nchaugen/tabletest-intellij/compare/v0.1.0...v0.2.0
