@@ -63,9 +63,6 @@
                 language="JAVA"
                 implementationClass="io.github.nchaugen.tabletest.inspections.TableTestUnusedDeclarationSuppressor"/>
 
-        <additionalTextAttributes scheme="Default" file="colorSchemes/TableTestDefault.xml"/>
-        <additionalTextAttributes scheme="Darcula" file="colorSchemes/TableTestDefault.xml"/>
-
     </extensions>
 
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
