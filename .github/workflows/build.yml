@@ -59,6 +59,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      - name: Clear Gradle transforms cache
+        shell: bash
+        run: rm -rf ~/.gradle/caches/*/transforms
+
       # Set environment variables
       - name: Export Properties
         id: properties
@@ -129,6 +133,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         with:
           cache-read-only: true
+
+      - name: Clear Gradle transforms cache
+        shell: bash
+        run: rm -rf ~/.gradle/caches/*/transforms
 
       # Run tests
       - name: Run Tests
@@ -216,6 +224,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         with:
           cache-read-only: true
+
+      - name: Clear Gradle transforms cache
+        shell: bash
+        run: rm -rf ~/.gradle/caches/*/transforms
 
       # Cache Plugin Verifier IDEs
       - name: Setup Plugin Verifier IDEs Cache
