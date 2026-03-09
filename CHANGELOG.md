@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-03-09
+
 ### Fixed
 
 - Kotlin plugin mode compatibility declaration is now loaded from the main plugin descriptor, removing K2 compatibility warnings in plugin verification.
@@ -142,7 +144,8 @@
 - Syntax highlighting in TableTest tables
 - Auto-injection of TableTest language for Java `@TableTest` annotations
 
-[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/nchaugen/tabletest-intellij/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.0...v0.2.1
