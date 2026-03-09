@@ -47,6 +47,16 @@ Applies consistent spacing within cells:
 - No space before commas, one space after (for lists/sets/maps)
 - No space inside brackets
 
+Value spacing is configurable via `Settings/Preferences > Editor > Code Style > TableTest > Spaces`:
+- Space before comma
+- Space after comma
+- Space before colon
+- Space after colon
+- Spaces within brackets (`[]`)
+- Spaces within braces (`{}`)
+
+The Code Style preview uses the same formatter pipeline and keeps table columns aligned when these spacing options change.
+
 ### Comment Toggle
 
 Toggle line comments (`//`) on selected lines using the standard IDE shortcut (Cmd+/ on macOS, Ctrl+/ on Windows/Linux).

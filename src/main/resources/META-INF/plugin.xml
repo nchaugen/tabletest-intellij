@@ -36,6 +36,9 @@
         <colorSettingsPage
                 implementation="io.github.nchaugen.tabletest.language.TableTestColorSettingsPage"/>
 
+        <langCodeStyleSettingsProvider
+                implementation="io.github.nchaugen.tabletest.language.TableTestCodeStyleSettingsProvider"/>
+
         <formatting.injectedOptions
                 implementation="io.github.nchaugen.tabletest.language.TableTestInjectedFormattingOptionsProvider"/>
 

@@ -10,8 +10,9 @@ Adds Java and Kotlin editor support for the [TableTest](https://github.com/nchau
 TableTest expresses test cases as readable tables, where each column is an input or expected output and each row is a test case. This plugin makes those tables easier to read, edit, and maintain in IntelliJ IDEA.
 
 ## Features
-- Syntax highlighting for headers, values, separators, comments, and invalid values
-- Auto-formatting to align table columns
+- Configurable syntax highlighting colours for headers, values, separators, comments, and invalid values
+- Smart auto-formatting for table indentation, row/column alignment, and value separators
+- Configurable value spacing rules in `Code Style > TableTest > Spaces`
 - Language injection for `@TableTest` in Java and Kotlin files
 - Row move shortcuts and comment toggle support
 
@@ -24,6 +25,7 @@ TableTest expresses test cases as readable tables, where each column is an input
   - [Writing TableTest Tables](#writing-tabletest-tables)
   - [Keyboard Shortcuts](#keyboard-shortcuts)
   - [Language Injection](#language-injection)
+  - [Customizing Formatting](#customizing-formatting)
   - [Customizing Colours](#customizing-colours)
 - [Installation](#installation)
 
@@ -99,6 +101,14 @@ String table = """
     | 1 | 2 |
     """;
 ```
+
+### Customizing Formatting
+
+Adjust value spacing rules used by the TableTest formatter:
+
+1. Go to **Settings/Preferences** > **Editor** > **Code Style** > **TableTest** > **Spaces**
+2. Configure spacing around commas and colons, plus spaces within `[]` and `{}`
+3. Use the preview pane to see formatting changes while keeping columns aligned
 
 ### Customizing Colours
 

@@ -5,6 +5,7 @@ import com.intellij.formatting.FormattingModel
 import com.intellij.formatting.FormattingModelBuilder
 import com.intellij.formatting.FormattingModelProvider.createFormattingModelForPsiFile
 import com.intellij.formatting.SpacingBuilder
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COLON
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMA
@@ -29,17 +30,22 @@ class TableTestFormattingModelBuilder : FormattingModelBuilder {
             formattingContext.codeStyleSettings
         )
 
-    private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder =
-        SpacingBuilder(settings, TableTestLanguage)
+    private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
+        val commonSettings: CommonCodeStyleSettings = settings.getCommonSettings(TableTestLanguage)
+
+        return SpacingBuilder(settings, TableTestLanguage)
             .around(PIPE).spaces(1)
             .before(LINE_COMMENT).spaces(0)
             .after(LINE_COMMENT).spaces(0)  // COMMENT token includes original spacing
-            .before(COLON).spaces(0)
-            .after(COLON).spaces(1)
-            .before(COMMA).spaces(0)
-            .after(COMMA).spaces(1)
-            .after(LEFT_BRACKET).spaces(0)
-            .before(RIGHT_BRACKET).spaces(0)
-            .after(LEFT_BRACE).spaces(0)
-            .before(RIGHT_BRACE).spaces(0)
+            .before(COLON).spaces(toSpaces(commonSettings.SPACE_BEFORE_COLON))
+            .after(COLON).spaces(toSpaces(commonSettings.SPACE_AFTER_COLON))
+            .before(COMMA).spaces(toSpaces(commonSettings.SPACE_BEFORE_COMMA))
+            .after(COMMA).spaces(toSpaces(commonSettings.SPACE_AFTER_COMMA))
+            .after(LEFT_BRACKET).spaces(toSpaces(commonSettings.SPACE_WITHIN_BRACKETS))
+            .before(RIGHT_BRACKET).spaces(toSpaces(commonSettings.SPACE_WITHIN_BRACKETS))
+            .after(LEFT_BRACE).spaces(toSpaces(commonSettings.SPACE_WITHIN_BRACES))
+            .before(RIGHT_BRACE).spaces(toSpaces(commonSettings.SPACE_WITHIN_BRACES))
+    }
+
+    private fun toSpaces(enabled: Boolean): Int = if (enabled) 1 else 0
 }

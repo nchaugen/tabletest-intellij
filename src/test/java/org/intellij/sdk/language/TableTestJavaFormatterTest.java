@@ -343,4 +343,34 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
             """);
     }
 
+    public void testJavaFormatterUsesConfiguredSpacingInsideInjectedTable() {
+        withTableTestSpacingSettings(
+            settings -> settings.SPACE_AFTER_COMMA = false,
+            () -> {
+                format(
+                    "Test.java", """
+                        public class Test {
+                            //language=tabletest
+                            @TableTest(\"""
+                                values
+                                [a,b]<caret>
+                                \""")
+                            void test() {}
+                        }
+                        """
+                );
+                myFixture.checkResult("""
+                    public class Test {
+                        //language=tabletest
+                        @TableTest(\"""
+                            values
+                            [a,b]
+                            \""")
+                        void test() {}
+                    }
+                    """);
+            }
+        );
+    }
+
 }
