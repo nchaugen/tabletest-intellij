@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Kotlin plugin mode compatibility declaration is now loaded from the main plugin descriptor, removing K2 compatibility warnings in plugin verification.
+- Expected header styling now inherits from language defaults (`Static method`) by default.
+
 ## [0.3.0] - 2026-03-08
 
 ### Added
