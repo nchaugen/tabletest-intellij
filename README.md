@@ -5,23 +5,15 @@
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/27334-tabletest.svg)](https://plugins.jetbrains.com/plugin/27334-tabletest)
 
 <!-- Plugin description -->
-Adds support for the table language used in [TableTest](https://github.com/nchaugen/tabletest) for data-driven testing in JUnit.
+Adds Java and Kotlin editor support for the [TableTest](https://github.com/nchaugen/tabletest) table language used in data-driven JUnit tests.
 
-## What is TableTest?
-
-[TableTest](https://github.com/nchaugen/tabletest) is a JUnit extension that lets you write data-driven tests as readable tables instead of repetitive test methods. Instead of writing multiple similar test methods or complex parameterized tests, you define test cases in a table format where:
-
-- Each **column** represents a test input parameter or expected output
-- Each **row** represents a test case
-
-This approach makes test data clear, maintainable, and easy to extend. This plugin provides IDE support for working with TableTest tables, including syntax highlighting, auto-formatting, and language injection into Java and Kotlin test files.
+TableTest expresses test cases as readable tables, where each column is an input or expected output and each row is a test case. This plugin makes those tables easier to read, edit, and maintain in IntelliJ IDEA.
 
 ## Features
-- Auto-formatting TableTest table to align columns
-- Syntax highlighting for TableTest tables
-- Auto-injection of TableTest language for `@TableTest` annotations in Java and Kotlin files
-- Shortcut for toggling commenting of selected lines
-- Move row up/down with keyboard shortcuts
+- Syntax highlighting for headers, values, separators, comments, and invalid values
+- Auto-formatting to align table columns
+- Language injection for `@TableTest` in Java and Kotlin files
+- Row move shortcuts and comment toggle support
 
 <!-- Plugin description end -->
 
