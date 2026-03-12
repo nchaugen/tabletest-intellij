@@ -18,6 +18,10 @@ public class TableTestParsingTest extends ParsingTestCase {
         doTest(true);
     }
 
+    public void testQuotedMapKeyTestData() {
+        doTest(true);
+    }
+
     /**
      * @return path to test data file directory relative to root of this module.
      */

@@ -4,6 +4,7 @@
 
 ### Added
 
+- Support for single and double quoted map keys in TableTest maps.
 - TableTest Code Style settings page under `Settings > Editor > Code Style > TableTest` with value spacing controls for commas, colons, and bracket/brace interiors.
 
 ## [0.3.1] - 2026-03-09

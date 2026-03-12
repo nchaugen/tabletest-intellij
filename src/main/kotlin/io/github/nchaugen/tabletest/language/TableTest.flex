@@ -98,6 +98,8 @@ SINGLE_QUOTED_ELEMENT_CONTENT=[^\'\r\n,\]\}]*
     \]                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACKET; }
     \}                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACE; }
     // Matched quotes - enter quoted state only if closing quote exists on same line
+    \" {DOUBLE_QUOTED_CONTENT} \" / [ \t]* \: { return TableTestTypes.MAP_KEY; }
+    \' {SINGLE_QUOTED_CONTENT} \' / [ \t]* \: { return TableTestTypes.MAP_KEY; }
     \"  / {DOUBLE_QUOTED_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
     \'  / {SINGLE_QUOTED_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
     // Unmatched quotes - treat as unquoted string value
