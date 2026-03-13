@@ -52,7 +52,7 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation("org.opentest4j:opentest4j:1.3.0")
-    testImplementation("org.tabletest:tabletest-parser:1.1.0")
+    testImplementation("org.tabletest:tabletest-parser:1.2.0")
 }
 
 grammarKit {
