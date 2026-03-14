@@ -63,7 +63,7 @@ public class TableTestQuotedMapKeyInsightTest extends LightJavaCodeInsightFixtur
     public void testStandaloneTableFileQuotedMapKeys() {
         myFixture.configureByText("Standalone.table", """
             Header
-            ["double": 1, 'single': 2, unquoted: 3]
+            ["double": 1, 'single': 2, unquoted: 3, "with:[],{}": 4]
             """);
         assertNoParseErrors();
     }
@@ -81,7 +81,7 @@ public class TableTestQuotedMapKeyInsightTest extends LightJavaCodeInsightFixtur
             List<Pair<PsiElement, TextRange>> injections = injectedManager.getInjectedPsiFiles(host);
             assertNotNull("No injections found", injections);
             assertFalse("Injections list is empty", injections.isEmpty());
-            assertNoErrors(injections.get(0).first);
+            assertNoErrors(injections.getFirst().first);
         }
     }
 

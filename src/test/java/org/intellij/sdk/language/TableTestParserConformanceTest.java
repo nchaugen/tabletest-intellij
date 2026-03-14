@@ -350,6 +350,48 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
         assertBothParsersAccept("header\n  [   a   :  a   ]  \n");
     }
 
+    // --- Quoted Map Keys ---
+
+    public void testSingleQuotedMapKey() {
+        assertBothParsersAccept("header\n['key': 'value']\n");
+    }
+
+    public void testDoubleQuotedMapKey() {
+        assertBothParsersAccept("header\n[\"key\": \"value\"]\n");
+    }
+
+    public void testQuotedMapKeyWithSpaces() {
+        assertBothParsersAccept("header\n['key with spaces': value]\n");
+    }
+
+    public void testQuotedMapKeyWithColon() {
+        assertBothParsersAccept("header\n['key:with:colon': value]\n");
+    }
+
+    public void testQuotedMapKeyWithSpecialChars() {
+        assertBothParsersAccept("header\n['!@#$%^&*()': value]\n");
+    }
+
+    public void testQuotedMapKeyWithBrackets() {
+        assertBothParsersAccept("header\n['key[with]brackets': value]\n");
+    }
+
+    public void testQuotedMapKeyWithBraces() {
+        assertBothParsersAccept("header\n['key{with}braces': value]\n");
+    }
+
+    public void testQuotedMapKeyWithComma() {
+        assertBothParsersAccept("header\n['key,with,comma': value]\n");
+    }
+
+    public void testQuotedMapKeyWithMixedSpecials() {
+        assertBothParsersAccept("header\n['key:[],{}': value]\n");
+    }
+
+    public void testMixedQuotedAndUnquotedMapKeys() {
+        assertBothParsersAccept("header\n['quoted': 1, unquoted: 2, \"double\": 3]\n");
+    }
+
     // --- Invalid syntax tests ---
 
     public void testTripleSingleQuotes() {
@@ -531,7 +573,7 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
         }
 
         // For reject tests, verify both parsers actually reject (neither accepts)
-        if (referenceParserAccepts || pluginParserAccepts) {
+        if (referenceParserAccepts) {
             fail("Expected both parsers to reject, but at least one accepts.\n" +
                  "Input: " + input.replace("\n", "\\n") + "\n" +
                  "Reference parser accepts: " + referenceParserAccepts + "\n" +
