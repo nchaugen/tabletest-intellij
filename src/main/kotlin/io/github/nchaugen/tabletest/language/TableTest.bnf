@@ -41,7 +41,7 @@ map ::= '[' map_entry (',' map_entry)* ']' | EMPTY_MAP
 list ::= '[' (element (',' element)* )? ']'
 set ::= '{' (element (',' element)* )? '}'
 
-map_entry ::= (MAP_KEY | string) ':' element {
+map_entry ::= MAP_KEY ':' element {
   pin=2
 }
 
