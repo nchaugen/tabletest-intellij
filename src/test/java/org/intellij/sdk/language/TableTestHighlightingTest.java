@@ -1,5 +1,8 @@
 package org.intellij.sdk.language;
 
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiErrorElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCase {
@@ -75,6 +78,8 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
                 [key: value]
                 [a: 1, b: 2]
                 [:]
+                ["double quoted": 1, 'single quoted': 2]
+                ["key with:[],{}": 3]
                 """
         );
         myFixture.checkHighlighting(false, false, false, true);
@@ -122,7 +127,7 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
                 @interface TableTest {
                     String value();
                 }
-
+                
                 public class Test {
                     //language=tabletest
                     @TableTest(\"""
@@ -139,10 +144,10 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
                         1                  | 2                                  | 3
                         '1'                | "2"                                | 3
                         ''                 | ""                                 |
-
+                
                         //
                         // comment
-
+                
                         xx                 | yy                                 | zz
                         æææ                | øøø                                | ååå
                         [1, 2, 3]          | [one: 1, two: 2, three: 3]         | {1, 2, 3}
@@ -168,22 +173,22 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
         myFixture.addFileToProject(
             "io/github/nchaugen/tabletest/junit/TableTest.java",
             """
-            package io.github.nchaugen.tabletest.junit;
-
-            import java.lang.annotation.*;
-
-            @Retention(RetentionPolicy.RUNTIME)
-            @Target(ElementType.METHOD)
-            public @interface TableTest {
-                String[] value();
-            }
-            """
+                package io.github.nchaugen.tabletest.junit;
+                
+                import java.lang.annotation.*;
+                
+                @Retention(RetentionPolicy.RUNTIME)
+                @Target(ElementType.METHOD)
+                public @interface TableTest {
+                    String[] value();
+                }
+                """
         );
 
         myFixture.configureByText(
             "Test.java", """
                 import io.github.nchaugen.tabletest.junit.TableTest;
-
+                
                 public class Test {
                     @TableTest({
                         "Collection literal | Map literal | Set literal?",
@@ -204,22 +209,22 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
         myFixture.addFileToProject(
             "io/github/nchaugen/tabletest/junit/TableTest.java",
             """
-            package io.github.nchaugen.tabletest.junit;
-
-            import java.lang.annotation.*;
-
-            @Retention(RetentionPolicy.RUNTIME)
-            @Target(ElementType.METHOD)
-            public @interface TableTest {
-                String value();
-            }
-            """
+                package io.github.nchaugen.tabletest.junit;
+                
+                import java.lang.annotation.*;
+                
+                @Retention(RetentionPolicy.RUNTIME)
+                @Target(ElementType.METHOD)
+                public @interface TableTest {
+                    String value();
+                }
+                """
         );
 
         myFixture.configureByText(
             "TableCollectionsAndUnicodeProbe.java", """
                 import io.github.nchaugen.tabletest.junit.TableTest;
-
+                
                 public class TableCollectionsAndUnicodeProbe {
                     @TableTest(\"""
                         Collection literal | Map literal                        | Set literal?
@@ -235,10 +240,10 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
                         1                  | 2                                  | 3
                         '1'                | "2"                                | 3
                         ''                 | ""                                 |
-
+                
                         //
                         // comment
-
+                
                         xx                 | yy                                 | zz
                         æææ                | øøø                                | ååå
                         [1, 2, 3]          | [one: 1, two: 2, three: 3]         | {1, 2, 3}
@@ -264,26 +269,26 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
         myFixture.addFileToProject(
             "io/github/nchaugen/tabletest/junit/TableTest.java",
             """
-            package io.github.nchaugen.tabletest.junit;
-
-            import java.lang.annotation.*;
-
-            @Retention(RetentionPolicy.RUNTIME)
-            @Target(ElementType.METHOD)
-            public @interface TableTest {
-                String value();
-            }
-            """
+                package io.github.nchaugen.tabletest.junit;
+                
+                import java.lang.annotation.*;
+                
+                @Retention(RetentionPolicy.RUNTIME)
+                @Target(ElementType.METHOD)
+                public @interface TableTest {
+                    String value();
+                }
+                """
         );
 
         myFixture.configureByText(
             "LegacyLeapYearExampleTest.java", """
                 import io.github.nchaugen.tabletest.junit.TableTest;
-
+                
                 import java.time.Year;
-
+                
                 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+                
                 public class LegacyLeapYearExampleTest {
                     @TableTest(\"""
                         Scenario                           | Example years       | Is leap year?
@@ -306,30 +311,30 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
         myFixture.addFileToProject(
             "org/tabletest/junit/TableTest.java",
             """
-            package org.tabletest.junit;
-
-            import java.lang.annotation.*;
-
-            @Retention(RetentionPolicy.RUNTIME)
-            @Target(ElementType.METHOD)
-            public @interface TableTest {
-                String[] value();
-            }
-            """
+                package org.tabletest.junit;
+                
+                import java.lang.annotation.*;
+                
+                @Retention(RetentionPolicy.RUNTIME)
+                @Target(ElementType.METHOD)
+                public @interface TableTest {
+                    String[] value();
+                }
+                """
         );
 
         myFixture.configureByText(
             "ModernLeapYearExampleTest.java", """
                 package io.github.nchaugen.examples.modern;
-
+                
                 import org.tabletest.junit.TableTest;
-
+                
                 import java.time.Year;
-
+                
                 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+                
                 public class ModernLeapYearExampleTest {
-
+                
                     @TableTest(\"""
                         Scenario                              | Example years      | Is leap year?
                         years not divisible by 4              | {2001, 2002, 2003} | false
@@ -351,4 +356,27 @@ public class TableTestHighlightingTest extends LightJavaCodeInsightFixtureTestCa
     protected String getTestDataPath() {
         return "src/test/testData";
     }
+
+    public void testNegativeSyntax() {
+        // Malformed list
+        myFixture.configureByText("test.table", "header\n[a, b}\n");
+        assertHasStandaloneError();
+
+        // Malformed map
+        myFixture.configureByText("test.table", "header\n[key: value}\n");
+        assertHasStandaloneError();
+
+        // Malformed set
+        myFixture.configureByText("test.table", "header\n{a, b]\n");
+        assertHasStandaloneError();
+    }
+
+    private void assertHasStandaloneError() {
+        PsiElement file = myFixture.getFile();
+        assertFalse(
+            "Expected parse errors in TableTest, but none found in: " + file.getText(),
+            PsiTreeUtil.collectElementsOfType(file, PsiErrorElement.class).isEmpty()
+        );
+    }
+
 }

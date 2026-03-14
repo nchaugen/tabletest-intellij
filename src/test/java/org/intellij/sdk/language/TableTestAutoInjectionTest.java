@@ -555,4 +555,109 @@ public class TableTestAutoInjectionTest extends LightJavaCodeInsightFixtureTestC
 
         return null;
     }
+    /**
+     * Tests auto-injection in Java using named 'value = ...' syntax with a text block.
+     */
+    public void testJavaAutoInjection_RealAnnotation_NamedValue_Works() {
+        myFixture.addFileToProject(
+            "io/github/nchaugen/tabletest/junit/TableTest.java",
+            """
+            package io.github.nchaugen.tabletest.junit;
+            public @interface TableTest {
+                String value();
+            }
+            """
+        );
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.java", """
+            import io.github.nchaugen.tabletest.junit.TableTest;
+            class Test {
+                @TableTest(value = \"""
+                    header
+                    v<caret>alue
+                    \""")
+                void test() {}
+            }
+            """);
+        assertInjectionPresent("Java named value with real annotation");
+    }
+
+    /**
+     * Tests auto-injection in Java for string arrays with named 'value = ...' syntax.
+     */
+    public void testJavaAutoInjection_RealAnnotation_Array_NamedValue_Works() {
+        myFixture.addFileToProject(
+            "io/github/nchaugen/tabletest/junit/TableTest.java",
+            """
+            package io.github.nchaugen.tabletest.junit;
+            public @interface TableTest {
+                String[] value();
+            }
+            """
+        );
+        myFixture.setCaresAboutInjection(true);
+        myFixture.configureByText("Test.java", """
+            import io.github.nchaugen.tabletest.junit.TableTest;
+            class Test {
+                @TableTest(value = {
+                    "header",
+                    "v<caret>alue"
+                })
+                void test() {}
+            }
+            """);
+        assertSingleInjectionPresent("Java array named value with real annotation");
+    }
+
+    public void testNegativeSyntaxInjected() {
+        myFixture.setCaresAboutInjection(true);
+        // Add annotation definition to ensure auto-injection/hint works
+        myFixture.addFileToProject(
+            "org/tabletest/junit/TableTest.java",
+            "package org.tabletest.junit; public @interface TableTest { String value(); }"
+        );
+
+        // Java malformed list
+        myFixture.configureByText("Test.java", """
+            import org.tabletest.junit.TableTest;
+            class Test {
+                @TableTest("[a<caret>, b}")
+                void test() {}
+            }
+            """);
+        assertHasError();
+
+        // Kotlin malformed map
+        myFixture.configureByText("Test.kt", """
+            import org.tabletest.junit.TableTest
+            class Test {
+                @TableTest("[key<caret>: value}")
+                fun test() {}
+            }
+            """);
+        assertHasError();
+    }
+
+    private void assertHasError() {
+        PsiFile file = myFixture.getFile();
+        PsiElement injectedFile;
+        if (file.getLanguage().getID().equals("TableTest")) {
+            injectedFile = file;
+        } else {
+            InjectedLanguageManager injectedManager = InjectedLanguageManager.getInstance(getProject());
+            PsiElement elementAtCaret = file.findElementAt(myFixture.getCaretOffset());
+            assertNotNull("No element at caret", elementAtCaret);
+            PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(elementAtCaret, PsiLanguageInjectionHost.class, false);
+            assertNotNull("No injection host found at caret", host);
+            List<Pair<PsiElement, TextRange>> injections = injectedManager.getInjectedPsiFiles(host);
+            assertNotNull("No injections found for host", injections);
+            assertFalse("Injections list is empty", injections.isEmpty());
+            injectedFile = injections.getFirst().first;
+        }
+        assertFalse(
+            "Expected parse errors in injected TableTest, but none found",
+            PsiTreeUtil.collectElementsOfType(injectedFile, PsiErrorElement.class).isEmpty()
+        );
+    }
+
 }

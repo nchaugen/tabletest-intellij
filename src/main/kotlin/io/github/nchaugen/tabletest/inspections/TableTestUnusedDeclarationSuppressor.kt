@@ -11,7 +11,16 @@ class TableTestUnusedDeclarationSuppressor : InspectionSuppressor {
             return false
         }
 
-        return isConverterAnnotatedJava(element)
+        return isConverterAnnotatedJava(element) ||
+                isTableTestAnnotatedJava(element) ||
+                KotlinConverterAnnotationUtil.isConverterAnnotatedKotlin(element) ||
+                KotlinConverterAnnotationUtil.isTableTestAnnotatedKotlin(element)
+    }
+
+    private fun isTableTestAnnotatedJava(element: PsiElement): Boolean {
+        val method = com.intellij.psi.util.PsiTreeUtil.getParentOfType(element, com.intellij.psi.PsiMethod::class.java, false) ?: return false
+        return method.hasAnnotation("io.github.nchaugen.tabletest.junit.TableTest") ||
+                method.hasAnnotation("org.tabletest.junit.TableTest")
     }
 
     override fun getSuppressActions(element: PsiElement?, toolId: String): Array<SuppressQuickFix> =

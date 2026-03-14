@@ -8,7 +8,13 @@ import com.intellij.psi.PsiElement
  */
 class TableTestImplicitUsageProvider : ImplicitUsageProvider {
     override fun isImplicitUsage(element: PsiElement): Boolean =
-        ConverterAnnotationUtil.isConverterAnnotatedJava(element)
+        isTableTestAnnotated(element) || ConverterAnnotationUtil.isConverterAnnotatedJava(element)
+
+    private fun isTableTestAnnotated(element: PsiElement): Boolean {
+        val method = com.intellij.psi.util.PsiTreeUtil.getParentOfType(element, com.intellij.psi.PsiMethod::class.java, false) ?: return false
+        return method.hasAnnotation("io.github.nchaugen.tabletest.junit.TableTest") ||
+                method.hasAnnotation("org.tabletest.junit.TableTest")
+    }
 
     override fun isImplicitRead(element: PsiElement): Boolean = false
 

@@ -277,4 +277,33 @@ public class TableTestKotlinFormatterTest extends TableTestFormatterTestCase {
             """);
     }
 
+    public void testKotlinFormatterQuotedMapKeys() {
+        format(
+            "Test.kt", """
+                class Test {
+                    //language=tabletest
+                    @TableTest(
+                        \"""
+                        header
+                        ["a":1,'b':2]<caret>
+                        \"""
+                    )
+                    fun test() {}
+                }
+                """
+        );
+        myFixture.checkResult("""
+            class Test {
+                //language=tabletest
+                @TableTest(
+                    \"""
+                    header
+                    ["a": 1, 'b': 2]
+                    \"""
+                )
+                fun test() {}
+            }
+            """);
+    }
+
 }

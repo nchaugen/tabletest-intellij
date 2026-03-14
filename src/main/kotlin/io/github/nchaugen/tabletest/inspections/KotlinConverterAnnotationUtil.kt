@@ -15,6 +15,20 @@ internal object KotlinConverterAnnotationUtil {
         return function.annotationEntries.any(::isConverterAnnotation)
     }
 
+    fun isTableTestAnnotatedKotlin(element: PsiElement): Boolean {
+        val function = findKotlinFunction(element) ?: return false
+        return function.annotationEntries.any { entry ->
+            val shortName = entry.shortName?.asString()
+            if (shortName != "TableTest") return@any false
+
+            val typeReference = entry.typeReference?.text ?: return@any true
+            if (!typeReference.contains('.')) return@any true
+
+            typeReference == "io.github.nchaugen.tabletest.junit.TableTest" ||
+                    typeReference == "org.tabletest.junit.TableTest"
+        }
+    }
+
     private fun findKotlinFunction(element: PsiElement): KtNamedFunction? {
         PsiTreeUtil.getParentOfType(element, KtNamedFunction::class.java, false)?.let { return it }
 

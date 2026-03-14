@@ -180,6 +180,23 @@ public class TableTestTableFormatterTest extends TableTestFormatterTestCase {
             """);
     }
 
+    public void testFormatterQuotedMapKeys() {
+        format(
+            "test.table", """
+                header
+                ["a": 1, 'b': 2]
+                ["quoted key": "quoted value"]
+                ["with:[],{}": 3]
+                """
+        );
+        myFixture.checkResult("""
+            header
+            ["a": 1, 'b': 2]
+            ["quoted key": "quoted value"]
+            ["with:[],{}": 3]
+            """);
+    }
+
     public void testTableTestDefaultSpacingSettings() {
         com.intellij.psi.codeStyle.CommonCodeStyleSettings settings = CodeStyle
             .getSettings(getProject())

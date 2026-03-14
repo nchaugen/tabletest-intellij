@@ -343,6 +343,31 @@ public class TableTestJavaFormatterTest extends TableTestFormatterTestCase {
             """);
     }
 
+    public void testJavaFormatterQuotedMapKeys() {
+        format(
+            "Test.java", """
+                public class Test {
+                    //language=tabletest
+                    @TableTest(\"""
+                        header
+                        ["a":1,'b':2]<caret>
+                        \""")
+                    void test() {}
+                }
+                """
+        );
+        myFixture.checkResult("""
+            public class Test {
+                //language=tabletest
+                @TableTest(\"""
+                    header
+                    ["a": 1, 'b': 2]
+                    \""")
+                void test() {}
+            }
+            """);
+    }
+
     public void testJavaFormatterUsesConfiguredSpacingInsideInjectedTable() {
         withTableTestSpacingSettings(
             settings -> settings.SPACE_AFTER_COMMA = false,

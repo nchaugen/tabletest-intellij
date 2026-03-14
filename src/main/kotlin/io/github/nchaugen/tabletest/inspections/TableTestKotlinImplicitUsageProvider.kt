@@ -8,7 +8,8 @@ import com.intellij.psi.PsiElement
  */
 class TableTestKotlinImplicitUsageProvider : ImplicitUsageProvider {
     override fun isImplicitUsage(element: PsiElement): Boolean =
-        KotlinConverterAnnotationUtil.isConverterAnnotatedKotlin(element)
+        KotlinConverterAnnotationUtil.isTableTestAnnotatedKotlin(element) ||
+                KotlinConverterAnnotationUtil.isConverterAnnotatedKotlin(element)
 
     override fun isImplicitRead(element: PsiElement): Boolean = false
 
