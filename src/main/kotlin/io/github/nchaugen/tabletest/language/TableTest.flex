@@ -24,17 +24,16 @@ CRLF=\R
 WHITESPACE=[ \t]
 
 COMMENT=[^\r\n]+
-DATA_CHAR=[^ \t\r\n]
+DATA_CHAR=[^\r\n]
 UNQUOTED_CHAR=[^|\[\{\"\' \t\r\n]
 UNQUOTED_STRING=[^|\[\{\"\' \t\r\n]([^|\r\n]*[^| \t\r\n])?
-DOUBLE_QUOTED_STRING=[^\"]+
-SINGLE_QUOTED_STRING=[^\']+
-DOUBLE_QUOTED_CONTENT=[^\"\r\n]*
-SINGLE_QUOTED_CONTENT=[^\'\r\n]*
+
+ESC=\\ [^\r\n]
+DQ_CONTENT=([^\"\r\n\\] | {ESC})*
+SQ_CONTENT=([^\'\r\n\\] | {ESC})*
+
 MAP_KEY_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^|,:\[\] \t\r\n]*[^|,:\[\] \t\r\n])?
 UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\n])?
-DOUBLE_QUOTED_ELEMENT_CONTENT=[^\"\r\n,\]\}]*
-SINGLE_QUOTED_ELEMENT_CONTENT=[^\'\r\n,\]\}]*
 
 %state HEADER_ROW, DATA, DATA_ROW, COMMENT_LINE, INITIAL_COMMENT_LINE, DOUBLE_QUOTED, SINGLE_QUOTED, COMPOUND
 
@@ -68,12 +67,15 @@ SINGLE_QUOTED_ELEMENT_CONTENT=[^\'\r\n,\]\}]*
     \[\:\]             { return TableTestTypes.EMPTY_MAP; }
     \[                 { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACKET; }
     \{                 { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACE; }
+    
     // Matched quotes - enter quoted state only if closing quote exists on same line
-    \"  / {DOUBLE_QUOTED_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
-    \'  / {SINGLE_QUOTED_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
-    // Unmatched quotes - treat as unquoted string value
-    \" {DOUBLE_QUOTED_CONTENT} / [\r\n|]  { return TableTestTypes.STRING_VALUE; }
-    \' {SINGLE_QUOTED_CONTENT} / [\r\n|]  { return TableTestTypes.STRING_VALUE; }
+    \" / {DQ_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
+    \' / {SQ_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
+    
+    // Unmatched quotes - treat as part of unquoted string
+    \" {DQ_CONTENT} / [\r\n|] { return TableTestTypes.STRING_VALUE; }
+    \' {SQ_CONTENT} / [\r\n|] { return TableTestTypes.STRING_VALUE; }
+    
     {UNQUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
     \|                 { return TableTestTypes.PIPE; }
     {CRLF}             { yybegin(DATA); return TableTestTypes.NEWLINE; }
@@ -86,25 +88,30 @@ SINGLE_QUOTED_ELEMENT_CONTENT=[^\'\r\n,\]\}]*
 
 <DOUBLE_QUOTED> {
     \"                      { yybegin(stateStack.pop()); return TableTestTypes.DOUBLE_QUOTE; }
-    {DOUBLE_QUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
+    ([^\"\r\n\\] | {ESC})+  { return TableTestTypes.STRING_VALUE; }
 }
 
 <SINGLE_QUOTED> {
     \'                      { yybegin(stateStack.pop()); return TableTestTypes.SINGLE_QUOTE; }
-    {SINGLE_QUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
+    ([^\'\r\n\\] | {ESC})+  { return TableTestTypes.STRING_VALUE; }
 }
 
 <COMPOUND> {
     \]                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACKET; }
     \}                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACE; }
+    
+    // Quoted map keys with escapes
+    \" {DQ_CONTENT} \" / [ \t]* \: { return TableTestTypes.MAP_KEY; }
+    \' {SQ_CONTENT} \' / [ \t]* \: { return TableTestTypes.MAP_KEY; }
+    
     // Matched quotes - enter quoted state only if closing quote exists on same line
-    \" {DOUBLE_QUOTED_CONTENT} \" / [ \t]* \: { return TableTestTypes.MAP_KEY; }
-    \' {SINGLE_QUOTED_CONTENT} \' / [ \t]* \: { return TableTestTypes.MAP_KEY; }
-    \"  / {DOUBLE_QUOTED_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
-    \'  / {SINGLE_QUOTED_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
-    // Unmatched quotes - treat as unquoted string value
-    \" {DOUBLE_QUOTED_ELEMENT_CONTENT} / [,\]\}\r\n]  { return TableTestTypes.STRING_VALUE; }
-    \' {SINGLE_QUOTED_ELEMENT_CONTENT} / [,\]\}\r\n]  { return TableTestTypes.STRING_VALUE; }
+    \" / {DQ_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
+    \' / {SQ_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
+    
+    // Unmatched quotes in collection
+    \" {DQ_CONTENT} / [,\]\}\r\n] { return TableTestTypes.STRING_VALUE; }
+    \' {SQ_CONTENT} / [,\]\}\r\n] { return TableTestTypes.STRING_VALUE; }
+    
     \[\:\]              { return TableTestTypes.EMPTY_MAP; }
     \[                  { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACKET; }
     \{                  { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACE; }
