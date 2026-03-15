@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-03-15
+
 ### Added
 
 - Support for leading comments (comments at the very beginning of a table).
@@ -169,7 +171,8 @@
 - Syntax highlighting in TableTest tables
 - Auto-injection of TableTest language for Java `@TableTest` annotations
 
-[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/nchaugen/tabletest-intellij/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/nchaugen/tabletest-intellij/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/nchaugen/tabletest-intellij/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/nchaugen/tabletest-intellij/compare/v0.2.2...v0.3.0
