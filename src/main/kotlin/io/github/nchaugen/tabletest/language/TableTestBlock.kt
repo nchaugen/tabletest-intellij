@@ -11,6 +11,8 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.TokenSet
+import com.intellij.psi.PsiErrorElement
+import com.intellij.psi.util.PsiTreeUtil
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.BLANK_LINE
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.HEADER_ROW
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.PIPE
@@ -25,6 +27,26 @@ class TableTestBlock(
 
     override fun buildChildren(): List<Block> {
         val blocks: MutableList<Block> = ArrayList()
+
+        if (spacingBuilder == null) {
+            // If spacingBuilder is null, it means there are syntax errors in the file.
+            // We return a list of leaf-like blocks without alignment or spacing to prevent formatting.
+            var child = node.firstChildNode
+            while (child != null) {
+                if (child.elementType !in listOf(WHITE_SPACE, BLANK_LINE)) {
+                    blocks.add(
+                        TableTestCellBlock(
+                            child,
+                            null,
+                            null,
+                            null
+                        )
+                    )
+                }
+                child = child.treeNext
+            }
+            return blocks
+        }
 
         val pipeAlignments: List<Alignment> = this.node
             .getChildren(TokenSet.create(HEADER_ROW))

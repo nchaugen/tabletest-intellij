@@ -7,6 +7,8 @@ import com.intellij.formatting.FormattingModelProvider.createFormattingModelForP
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings
 import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.psi.PsiErrorElement
+import com.intellij.psi.util.PsiTreeUtil
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COLON
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.COMMA
 import io.github.nchaugen.tabletest.language.psi.TableTestTypes.LEFT_BRACE
@@ -18,17 +20,21 @@ import io.github.nchaugen.tabletest.language.psi.TableTestTypes.RIGHT_BRACKET
 
 class TableTestFormattingModelBuilder : FormattingModelBuilder {
 
-    override fun createModel(formattingContext: FormattingContext): FormattingModel =
-        createFormattingModelForPsiFile(
-            formattingContext.node.psi.containingFile,
+    override fun createModel(formattingContext: FormattingContext): FormattingModel {
+        val psiFile = formattingContext.node.psi.containingFile
+        val hasErrors = !PsiTreeUtil.collectElementsOfType(psiFile, PsiErrorElement::class.java).isEmpty()
+
+        return createFormattingModelForPsiFile(
+            psiFile,
             TableTestBlock(
                 node = formattingContext.node,
                 wrap = null,
                 alignment = null,
-                spacingBuilder = createSpacingBuilder(formattingContext.codeStyleSettings)
+                spacingBuilder = if (hasErrors) null else createSpacingBuilder(formattingContext.codeStyleSettings)
             ),
             formattingContext.codeStyleSettings
         )
+    }
 
     private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
         val commonSettings: CommonCodeStyleSettings = settings.getCommonSettings(TableTestLanguage)
