@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+### Added
+
+- Support for leading comments (comments at the very beginning of a table).
+- Support for escaped quotes (`\"`, `\'`) and backslashes (`\\`) in quoted strings and map keys.
+- Methods annotated with `@TableTest` are now recognized as entry points, suppressing "Unused declaration" inspections.
+
+### Changed
+
+- Upgraded `tabletest-parser` to 1.2.0.
+- Upgraded IntelliJ Platform Gradle Plugin to 2.13.0.
+
+### Fixed
+
+- Table formatting is now disabled for files with syntax errors to prevent accidental code corruption.
+- Map keys only require quotes if they contain spaces or commas.
+- Improved parsing of rows at the end of a file without a trailing newline.
+- Resolved a compatibility warning for IntelliJ 2026.1.
+
 ## [0.4.0] - 2026-03-12
 
 ### Added

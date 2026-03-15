@@ -35,9 +35,9 @@ Here's what a TableTest looks like in your Java or Kotlin test:
 
 ```java
 @TableTest("""
-    | a | b | sum? |
-    | 1 | 2 | 3    |
-    | 5 | 3 | 8    |
+    a | b | sum?
+    1 | 2 | 3
+    5 | 3 | 8
     """)
 void testAddition(int a, int b, int sum) {
     assertThat(a + b).isEqualTo(sum);
@@ -52,17 +52,17 @@ The plugin provides:
 
 ```java
 // Before formatting:
-| a | b | sum? |
-| 1 | 2 | 3 |
-| 500 | 300 | 800 |
+a | b | sum?
+1 | 2 | 3
+500 | 300 | 800
 
 // After formatting:
-| a   | b   | sum? |
-| 1   | 2   | 3    |
-| 500 | 300 | 800  |
+a   | b   | sum?
+1   | 2   | 3
+500 | 300 | 800
 ```
 
-**Automatic Language Injection**: When you use `@TableTest` annotations, the plugin automatically provides TableTest language support. No manual configuration needed.
+**Automatic Language Injection**: When you use `@TableTest` annotations, the plugin automatically provides TableTest language support. No manual configuration needed. It also recognizes these methods as test entry points to suppress "Unused declaration" warnings.
 
 ## Usage Guide
 
@@ -76,7 +76,7 @@ A TableTest table consists of:
 
 The plugin supports various value types:
 - Simple values: `1`, `true`, `hello`
-- Quoted strings: `"text with spaces"`
+- Quoted strings: `"text with spaces"` (supports escaped quotes: `"contains \"escaped\" quotes"`)
 - Lists: `[1, 2, 3]`
 - Sets: `{a, b, c}`
 - Maps: `{key: value, foo: bar}`
@@ -97,8 +97,8 @@ The plugin automatically injects TableTest language support into `@TableTest` an
 ```java
 //language=tabletest
 String table = """
-    | a | b |
-    | 1 | 2 |
+    a | b
+    1 | 2
     """;
 ```
 
@@ -127,9 +127,9 @@ Adjust syntax highlighting colours:
   
 - Using JetBrains Marketplace:
 
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
+  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/27334-tabletest) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
 
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
+  You can also download the [latest release](https://plugins.jetbrains.com/plugin/27334-tabletest/versions) from JetBrains Marketplace and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 - Manually:
