@@ -6,12 +6,7 @@ import com.intellij.application.options.TabbedLanguageCodeStylePanel
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable
-import com.intellij.psi.codeStyle.CodeStyleConfigurable
-import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType
+import com.intellij.psi.codeStyle.*
 
 class TableTestCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() {
 
@@ -65,15 +60,15 @@ class TableTestCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() {
         }
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun getDefaultCommonSettings(): CommonCodeStyleSettings {
-        val settings = CommonCodeStyleSettings(TableTestLanguage)
-        settings.SPACE_BEFORE_COMMA = false
-        settings.SPACE_AFTER_COMMA = true
-        settings.SPACE_BEFORE_COLON = false
-        settings.SPACE_AFTER_COLON = true
-        settings.SPACE_WITHIN_BRACKETS = false
-        settings.SPACE_WITHIN_BRACES = false
-        return settings
+    override fun customizeDefaults(
+        commonSettings: CommonCodeStyleSettings,
+        indentOptions: CommonCodeStyleSettings.IndentOptions
+    ) {
+        commonSettings.SPACE_BEFORE_COMMA = false
+        commonSettings.SPACE_AFTER_COMMA = true
+        commonSettings.SPACE_BEFORE_COLON = false
+        commonSettings.SPACE_AFTER_COLON = true
+        commonSettings.SPACE_WITHIN_BRACKETS = false
+        commonSettings.SPACE_WITHIN_BRACES = false
     }
 }
