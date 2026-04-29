@@ -114,10 +114,7 @@ intellijPlatform {
     pluginVerification {
         ides {
             select {
-                types = listOf(
-                    IntelliJPlatformType.IntellijIdeaCommunity,
-                    IntelliJPlatformType.IntellijIdeaUltimate,
-                )
+                types = listOf(IntelliJPlatformType.IntellijIdeaCommunity)
                 channels = listOf(ProductRelease.Channel.RELEASE)
                 sinceBuild = "242.21829.142"
                 untilBuild = "252.*"
