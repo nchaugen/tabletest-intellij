@@ -2,5 +2,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <implicitUsageProvider
                 implementation="io.github.nchaugen.tabletest.inspections.TableTestKotlinImplicitUsageProvider"/>
+        <lang.inspectionSuppressor
+                language="JAVA"
+                implementationClass="io.github.nchaugen.tabletest.inspections.TableTestKotlinUnusedDeclarationSuppressor"/>
     </extensions>
 </idea-plugin>

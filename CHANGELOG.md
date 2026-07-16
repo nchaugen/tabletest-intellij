@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed a crash in the "Unused declaration" suppressor when the Kotlin plugin is disabled: Kotlin-aware suppression now loads only when the Kotlin plugin is available.
+
 ## [0.4.1] - 2026-03-15
 
 ### Added
