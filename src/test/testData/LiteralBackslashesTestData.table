@@ -1,0 +1,2 @@
+Header
+literal backslashes|"C:\temp\"|[path\\file, "A,B"]|["(s)u[c]c{e}ss": false]

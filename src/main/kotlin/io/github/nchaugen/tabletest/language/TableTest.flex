@@ -28,9 +28,8 @@ DATA_CHAR=[^\r\n]
 UNQUOTED_CHAR=[^|\[\{\"\' \t\r\n]
 UNQUOTED_STRING=[^|\[\{\"\' \t\r\n]([^|\r\n]*[^| \t\r\n])?
 
-ESC=\\ [^\r\n]
-DQ_CONTENT=([^\"\r\n\\] | {ESC})*
-SQ_CONTENT=([^\'\r\n\\] | {ESC})*
+DQ_CONTENT=[^\"\r\n]*
+SQ_CONTENT=[^\'\r\n]*
 
 MAP_KEY_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^|,:\[\] \t\r\n]*[^|,:\[\] \t\r\n])?
 UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\n])?
@@ -87,20 +86,20 @@ UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\
 }
 
 <DOUBLE_QUOTED> {
-    \"                      { yybegin(stateStack.pop()); return TableTestTypes.DOUBLE_QUOTE; }
-    ([^\"\r\n\\] | {ESC})+  { return TableTestTypes.STRING_VALUE; }
+    \"             { yybegin(stateStack.pop()); return TableTestTypes.DOUBLE_QUOTE; }
+    [^\"\r\n]+     { return TableTestTypes.STRING_VALUE; }
 }
 
 <SINGLE_QUOTED> {
-    \'                      { yybegin(stateStack.pop()); return TableTestTypes.SINGLE_QUOTE; }
-    ([^\'\r\n\\] | {ESC})+  { return TableTestTypes.STRING_VALUE; }
+    \'             { yybegin(stateStack.pop()); return TableTestTypes.SINGLE_QUOTE; }
+    [^\'\r\n]+     { return TableTestTypes.STRING_VALUE; }
 }
 
 <COMPOUND> {
     \]                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACKET; }
     \}                  { yybegin(stateStack.pop()); return TableTestTypes.RIGHT_BRACE; }
     
-    // Quoted map keys with escapes
+    // Quoted map keys
     \" {DQ_CONTENT} \" / [ \t]* \: { return TableTestTypes.MAP_KEY; }
     \' {SQ_CONTENT} \' / [ \t]* \: { return TableTestTypes.MAP_KEY; }
     

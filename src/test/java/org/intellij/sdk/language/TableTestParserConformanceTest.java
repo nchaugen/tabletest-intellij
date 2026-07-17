@@ -399,6 +399,33 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
         assertBothParsersAccept("header\n['quoted': 1, unquoted: 2, \"double\": 3]\n");
     }
 
+    // --- No escape sequences in quoted values (core pins no-escape semantics) ---
+
+    public void testBackslashDoesNotEscapeDoubleQuote() {
+        // "say \"hi\"" - quote closes at the second ", the rest is a stray element
+        assertBothParsersReject("header\n\"say \\\"hi\\\"\"\n");
+    }
+
+    public void testBackslashDoesNotEscapeSingleQuote() {
+        // 'it\'s' - quote closes before s, the rest is a stray element
+        assertBothParsersReject("header\n'it\\'s'\n");
+    }
+
+    public void testTrailingBackslashInQuotedValue() {
+        // "C:\temp\" - backslash before the closing quote is a literal character
+        assertBothParsersAccept("header\n\"C:\\temp\\\"\n");
+    }
+
+    public void testBackslashesInListElement() {
+        // [path\\file] - backslashes are literal characters in compounds
+        assertBothParsersAccept("header\n[path\\\\file]\n");
+    }
+
+    public void testBackslashDoesNotEscapeQuoteInMapKey() {
+        // ["a\"b": 1] - quoted map key closes at the second "
+        assertBothParsersReject("header\n[\"a\\\"b\": 1]\n");
+    }
+
     // --- Invalid syntax tests ---
 
     public void testTripleSingleQuotes() {

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Removed support for escaped quotes (`\"`, `\'`) and backslashes (`\\`) in quoted strings and map keys, reversing the 0.4.1 feature. The TableTest format has no escape sequences: quote characters cannot be escaped inside quoted values, and backslashes are ordinary characters. The plugin now matches the core parser.
+
 ### Fixed
 
 - Fixed a crash in the "Unused declaration" suppressor when the Kotlin plugin is disabled: Kotlin-aware suppression now loads only when the Kotlin plugin is available.

@@ -22,7 +22,7 @@ public class TableTestParsingTest extends ParsingTestCase {
         doTest(true);
     }
 
-    public void testEscapedCharsTestData() {
+    public void testLiteralBackslashesTestData() {
         doTest(true);
     }
 
