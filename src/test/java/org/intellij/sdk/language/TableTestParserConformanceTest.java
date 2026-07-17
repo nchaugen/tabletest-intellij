@@ -4,13 +4,20 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.ParsingTestCase;
 import io.github.nchaugen.tabletest.language.TableTestParserDefinition;
+import io.github.nchaugen.tabletest.language.psi.TableTestRow;
+import io.github.nchaugen.tabletest.language.psi.TableTestTypes;
+import org.tabletest.parser.Row;
 import org.tabletest.parser.TableParser;
 import org.tabletest.parser.TableTestParseException;
 
 import java.util.Collection;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Conformance tests verifying that the IntelliJ plugin parser accepts the same
@@ -501,6 +508,8 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
 
     // --- Helper methods ---
 
+    private static final TokenSet PIPE_TOKEN = TokenSet.create(TableTestTypes.PIPE);
+
     private void assertBothParsersAccept(String input) {
         boolean referenceParserAccepts = referenceParserAccepts(input);
         PsiFile file = createFile("test.table", input);
@@ -519,6 +528,43 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
                  "Input: " + input.replace("\n", "\\n") + "\n" +
                  "PSI tree:\n" + psiTree);
         }
+
+        if (referenceParserAccepts && pluginParserAccepts) {
+            assertSameRowStructure(input, file, psiTree);
+        }
+    }
+
+    private void assertSameRowStructure(String input, PsiFile file, String psiTree) {
+        List<Integer> referenceCellCounts = referenceCellCountsPerRow(input);
+        List<Integer> pluginCellCounts = pluginCellCountsPerRow(file);
+
+        if (!referenceCellCounts.equals(pluginCellCounts)) {
+            fail("Both parsers accept but split data rows into different cells.\n" +
+                 "Input: " + input.replace("\n", "\\n") + "\n" +
+                 "Reference parser cell counts per row: " + referenceCellCounts + "\n" +
+                 "Plugin parser cell counts per row: " + pluginCellCounts + "\n" +
+                 "PSI tree:\n" + psiTree);
+        }
+    }
+
+    private List<Integer> referenceCellCountsPerRow(String input) {
+        return TableParser.parse(input).rows().stream()
+            .map(Row::valueCount)
+            .collect(toList());
+    }
+
+    private List<Integer> pluginCellCountsPerRow(PsiFile file) {
+        return PsiTreeUtil.collectElementsOfType(file, TableTestRow.class).stream()
+            .map(this::cellCount)
+            .collect(toList());
+    }
+
+    /**
+     * Empty cells produce no element PSI, so counting elements would undercount;
+     * pipe count + 1 matches how the reference parser counts cells.
+     */
+    private int cellCount(TableTestRow row) {
+        return row.getNode().getChildren(PIPE_TOKEN).length + 1;
     }
 
     private boolean referenceParserAccepts(String input) {
