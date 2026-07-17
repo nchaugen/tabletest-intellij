@@ -71,9 +71,9 @@ UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\
     \" / {DQ_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
     \' / {SQ_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
     
-    // Unmatched quotes - treat as part of unquoted string
-    \" {DQ_CONTENT} / [\r\n|] { return TableTestTypes.STRING_VALUE; }
-    \' {SQ_CONTENT} / [\r\n|] { return TableTestTypes.STRING_VALUE; }
+    // Unmatched quotes - lenient literal up to the next pipe or end of line
+    \" ([^\"|\r\n]*[^\"| \t\r\n])? / [ \t]* [\r\n|] { return TableTestTypes.STRING_VALUE; }
+    \' ([^\'|\r\n]*[^\'| \t\r\n])? / [ \t]* [\r\n|] { return TableTestTypes.STRING_VALUE; }
     
     {UNQUOTED_STRING}  { return TableTestTypes.STRING_VALUE; }
     \|                 { return TableTestTypes.PIPE; }
@@ -106,10 +106,6 @@ UNQUOTED_ELEMENT_STRING=[^|,:\[\]\{\}\"\' \t\r\n]([^,|:\]\}\r\n]*[^,|:\]\} \t\r\
     // Matched quotes - enter quoted state only if closing quote exists on same line
     \" / {DQ_CONTENT} \"  { stateStack.push(yystate()); yybegin(DOUBLE_QUOTED); return TableTestTypes.DOUBLE_QUOTE; }
     \' / {SQ_CONTENT} \'  { stateStack.push(yystate()); yybegin(SINGLE_QUOTED); return TableTestTypes.SINGLE_QUOTE; }
-    
-    // Unmatched quotes in collection
-    \" {DQ_CONTENT} / [,\]\}\r\n] { return TableTestTypes.STRING_VALUE; }
-    \' {SQ_CONTENT} / [,\]\}\r\n] { return TableTestTypes.STRING_VALUE; }
     
     \[\:\]              { return TableTestTypes.EMPTY_MAP; }
     \[                  { stateStack.push(yystate()); yybegin(COMPOUND); return TableTestTypes.LEFT_BRACKET; }

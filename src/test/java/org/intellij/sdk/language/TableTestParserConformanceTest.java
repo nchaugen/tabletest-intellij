@@ -426,6 +426,23 @@ public class TableTestParserConformanceTest extends ParsingTestCase {
         assertBothParsersReject("header\n[\"a\\\"b\": 1]\n");
     }
 
+    // --- Unmatched quotes must not swallow delimiters ---
+
+    public void testUnclosedQuoteStopsAtPipe() {
+        // "abc | def - unclosed quote is a lenient literal; the pipe still splits (2 cells)
+        assertBothParsersAccept("a | b\n\"abc | def\n");
+    }
+
+    public void testUnclosedDoubleQuoteInListRejected() {
+        // ["ab, c] - no unclosed quotes inside compounds
+        assertBothParsersReject("header\n[\"ab, c]\n");
+    }
+
+    public void testUnclosedSingleQuoteInListRejected() {
+        // ['ab, c] - no unclosed quotes inside compounds
+        assertBothParsersReject("header\n['ab, c]\n");
+    }
+
     // --- Invalid syntax tests ---
 
     public void testTripleSingleQuotes() {

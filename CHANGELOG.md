@@ -8,6 +8,7 @@
 
 ### Fixed
 
+- An unclosed quote no longer swallows the rest of the row: the lenient literal now stops at the next pipe, and cells split the same way as the core parser. Inside lists, sets, and maps an unclosed quote is now highlighted as an error, matching the core parser's rejection.
 - Fixed a crash in the "Unused declaration" suppressor when the Kotlin plugin is disabled: Kotlin-aware suppression now loads only when the Kotlin plugin is available.
 
 ## [0.4.1] - 2026-03-15
