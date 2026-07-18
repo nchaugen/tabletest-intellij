@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-07-18
+
 ### Changed
 
 - Removed support for escaped quotes (`\"`, `\'`) and backslashes (`\\`) in quoted strings and map keys, reversing the 0.4.1 feature. The TableTest format has no escape sequences: quote characters cannot be escaped inside quoted values, and backslashes are ordinary characters. The plugin now matches the core parser.
@@ -180,7 +182,8 @@
 - Syntax highlighting in TableTest tables
 - Auto-injection of TableTest language for Java `@TableTest` annotations
 
-[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/nchaugen/tabletest-intellij/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/nchaugen/tabletest-intellij/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/nchaugen/tabletest-intellij/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/nchaugen/tabletest-intellij/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/nchaugen/tabletest-intellij/compare/v0.3.0...v0.3.1
